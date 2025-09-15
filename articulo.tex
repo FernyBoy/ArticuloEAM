@@ -1,0 +1,220 @@
+\documentclass[conference]{IEEEtran} % puedes cambiar a article si prefieres
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{svg}
+
+\title{Validación a gran escala y Análisis de la Capacidad de Rechazo en la Memoria Asociativa Entrópica}
+
+\author{
+    Dr. Rafael Morales Gamboa \\
+    Angel Fernando Bórquez Guerrero \\
+}
+
+\begin{document}
+
+\maketitle
+
+% -------------------- Abstract --------------------
+\begin{abstract}
+La Memoria Asociativa Entrópica (EAM), propuesta por Pineda y Morales (2023), constituye un modelo computacional inspirado en la cognición humana que combina propiedades de reconocimiento probabilístico con una arquitectura eficiente de almacenamiento y recuperación de patrones. En estudios previos, la EAM fue evaluada utilizando el dataset Fashion MNIST, obteniendo resultados positivos en la clasificación y reconstrucción de imágenes, aunque con la limitación de operar en un dominio reducido de solo diez clases. 
+
+En este trabajo se presentan dos contribuciones principales orientadas a superar estas limitaciones. En primer lugar, se evalúa la escalabilidad del modelo al migrar a un conjunto de datos sustancialmente mayor: Google QuickDraw!, con más de 300 clases y cientos de miles de ejemplos por categoría. En segundo lugar, se diseña un experimento de rechazo que permite verificar si la memoria es capaz de identificar y no reconocer aquellas clases que no fueron almacenadas explícitamente. Para ello, la memoria se entrena con solo la mitad de las clases y se evalúa sobre el conjunto completo, analizando la métrica de \textit{no response} como indicador de rechazo. 
+
+Los resultados obtenidos confirman que la EAM puede adaptarse a escenarios de mayor complejidad y ofrece un mecanismo efectivo de rechazo frente a estímulos inéditos, aportando evidencia de su potencial como modelo explicable y robusto dentro del campo de la inteligencia artificial.
+\end{abstract}
+
+
+
+% -------------------- Keywords --------------------
+\begin{IEEEkeywords}
+Memoria Asociativa Entrópica, QuickDraw, Fashion MNIST, escalabilidad, open-set recognition
+\end{IEEEkeywords}
+
+
+
+% -------------------- Introducción --------------------
+\section{Introducción}
+
+El desarrollo de modelos de memoria inspirados en la cognición humana constituye un área de investigación en creciente expansión dentro de la inteligencia artificial (IA). Estos enfoques buscan reproducir de manera computacional la capacidad de los sistemas biológicos para almacenar, asociar y recuperar información a partir de experiencias previas. En este contexto, la \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés) propuesta por Pineda y Morales (2023) representa un avance teórico significativo al ofrecer una arquitectura declarativa, distribuida y eficiente, capaz de realizar reconocimiento probabilístico y recuperación flexible de patrones.
+
+Los estudios iniciales con la EAM se enfocaron en el dataset \textit{Fashion MNIST} \cite{fashion2017}, un conjunto con 70,000 imágenes pertenecientes a 10 clases de objetos. En este dominio, el modelo demostró ser capaz de almacenar representaciones latentes generadas por un autoencoder convolucional y de recuperar dichas representaciones incluso en presencia de ruido o información incompleta. Estos resultados validaron la eficacia del modelo en tareas de clasificación cerrada, donde todas las clases de prueba habían sido vistas durante el entrenamiento.
+
+Sin embargo, el marco experimental original presentaba tres limitaciones principales. En primer lugar, la evaluación se realizó en un dominio pequeño y limitado, lo cual restringía el análisis de escalabilidad del modelo. En segundo lugar, no se había probado de manera explícita la capacidad de la memoria para rechazar clases no entrenadas, un aspecto crítico en problemas de \textit{open-set recognition}. Finalmente, la arquitectura experimental acoplaba el número de clases al entrenamiento de la red neuronal, lo que dificultaba realizar experimentos con subconjuntos variables de categorías.
+
+El presente trabajo busca superar estas limitaciones a través de tres líneas de investigación: (1) evaluar la escalabilidad de la EAM utilizando el dataset \textit{QuickDraw!} \cite{quickdraw2017}, con más de 300 clases y cientos de miles de ejemplos por categoría; (2) diseñar un experimento de rechazo que permita verificar si la memoria puede identificar y no reconocer clases no almacenadas; y (3) refactorizar el sistema para habilitar un marco experimental más flexible y controlable en términos del número de clases evaluadas.
+
+De esta manera, el artículo contribuye a ampliar la comprensión del comportamiento de la Memoria Asociativa Entrópica en escenarios más complejos, aportando evidencia empírica sobre su robustez, su capacidad de generalización y su potencial como paradigma alternativo dentro de la inteligencia artificial explicable.
+
+
+
+% -------------------- Antecedentes --------------------
+\section{Antecedentes}
+
+La \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés), propuesta por Pineda y Morales \cite{pineda2023}, surge como un modelo computacional inspirado en la cognición humana cuyo propósito es almacenar y recuperar patrones de manera probabilística y distribuida. A diferencia de los sistemas de memoria convencionales, la EAM opera sobre un único registro asociativo (\textit{Associative Memory Register}) que concentra las asociaciones de todos los patrones aprendidos en una representación matricial. Este enfoque permite un comportamiento flexible en el reconocimiento y la recuperación, y abre la puerta al estudio de fenómenos emergentes como la generalización y la generación de imágenes sintéticas.
+
+El modelo se fundamenta en tres operaciones principales: 
+\begin{itemize}
+    \item \textbf{$\lambda$-register}: registra un patrón en la memoria reforzando las asociaciones entre sus características.
+    \item \textbf{$\eta$-recognition}: determina si un estímulo de entrada puede ser reconocido por la memoria, utilizando un criterio de tolerancia a errores y umbrales de confianza.
+    \item \textbf{$\beta$-retrieval}: recupera un patrón completo a partir de una pista parcial o con ruido, utilizando distribuciones probabilísticas sobre las asociaciones almacenadas.
+\end{itemize}
+
+En experimentos previos, la EAM fue evaluada con el dataset \textit{Fashion MNIST} \cite{fashion2017}, compuesto por 70,000 imágenes distribuidas en 10 clases. En este escenario, la memoria fue alimentada con representaciones latentes producidas por un autoencoder convolucional, y demostró capacidad tanto para reconocer como para reconstruir patrones aún en condiciones de ruido o información incompleta. Asimismo, se exploraron fenómenos emergentes como la generación de secuencias de recuerdos (\textit{association chains}), mostrando la capacidad del sistema para transitar entre representaciones almacenadas.
+
+A pesar de estos resultados prometedores, el marco experimental original presentaba limitaciones relevantes: 
+(1) la evaluación se restringió a un conjunto reducido de 10 clases, lo que dificultaba analizar la escalabilidad del modelo en contextos más complejos; 
+(2) no se realizaron pruebas sistemáticas sobre la capacidad de la memoria para rechazar patrones de clases no vistas, un aspecto fundamental en el reconocimiento de conjuntos abiertos; y 
+(3) el diseño experimental estaba acoplado al número fijo de clases configuradas en las redes neuronales, limitando la flexibilidad para explorar diferentes configuraciones de carga de memoria.
+
+Estas limitaciones motivan el presente trabajo, cuyo objetivo es validar la EAM en un entorno más desafiante mediante la migración al dataset \textit{QuickDraw!} \cite{quickdraw2017} y el diseño de un experimento específico para analizar su capacidad de rechazo frente a clases inéditas.
+
+
+
+% -------------------- Metodología --------------------
+\section{Metodología}
+
+Con el objetivo de extender la validación del modelo de Memoria Asociativa Entrópica (EAM) y analizar su comportamiento en escenarios más complejos, se diseñó una metodología experimental dividida en tres fases principales. Estas fases permitieron migrar a un nuevo dominio de datos, implementar un mecanismo de rechazo explícito y dotar al sistema de mayor flexibilidad para futuros experimentos.
+
+\subsection{Migración del Dataset y Validación a Gran Escala}
+El primer paso consistió en reemplazar el conjunto de datos \textit{Fashion MNIST} por \textit{QuickDraw!} \cite{quickdraw2017}, con más de 300 clases y cientos de miles de ejemplos por categoría. Este proceso requirió:
+\begin{itemize}
+    \item \textbf{Adaptación del módulo de datos:} Se modificó el script \texttt{dataset.py} para cargar, procesar y balancear dinámicamente clases de QuickDraw. La lógica se ajustó para manejar un número variable de categorías y garantizar un número equitativo de muestras por clase.
+    \item \textbf{Reentrenamiento de las redes neuronales:} Se entrenó desde cero el sistema perceptivo definido en \texttt{neural\_net.py} (autoencoder y clasificador) utilizando QuickDraw como nueva fuente de datos. Este paso generó representaciones latentes (\textit{features}) adecuadas para la memoria.
+    \item \textbf{Validación del pipeline:} Se ejecutó el flujo completo (generación de características, almacenamiento en memoria y evaluación de reconocimiento) para verificar la compatibilidad del modelo con el nuevo dominio.
+\end{itemize}
+
+\subsection{Diseño e Implementación del Experimento de Rechazo}
+Para analizar la capacidad del sistema de rechazar patrones de clases no vistas, se implementó un segundo experimento con la siguiente lógica:
+\begin{itemize}
+    \item \textbf{Extensión de la interfaz de comandos:} Se añadió un nuevo argumento en el script principal \texttt{eam.py} (\texttt{-e 2}) para invocar este modo experimental.
+    \item \textbf{Registro parcial en memoria:} Durante la fase de entrenamiento, aunque el clasificador fue entrenado con todas las clases seleccionadas, la EAM registró únicamente la mitad de ellas.
+    \item \textbf{Evaluación con conjunto completo:} En la fase de prueba, el sistema se expuso a todas las clases, incluyendo las no registradas, lo que permitió evaluar explícitamente su respuesta de rechazo.
+    \item \textbf{Métrica de no respuesta:} Se empleó el índice \texttt{no\_response} como medida cuantitativa para evaluar la capacidad del sistema de no asociar patrones pertenecientes a clases no vistas.
+\end{itemize}
+
+\subsection{Refactorización para la Flexibilidad Experimental}
+Con el fin de transformar el sistema en una plataforma experimental más versátil, se llevaron a cabo modificaciones adicionales:
+\begin{itemize}
+    \item \textbf{Parametrización del número de clases:} El script \texttt{eam.py} fue modificado para aceptar el número de clases como argumento de ejecución (\texttt{<classes>}), en lugar de estar fijado en el código.
+    \item \textbf{Propagación de parámetros:} Este valor fue transmitido al módulo de datos, lo que permitió preparar dinámicamente solo el subconjunto de clases requerido.
+    \item \textbf{Carga dinámica:} El sistema quedó habilitado para realizar experimentos con diferentes cantidades de clases (2, 4, 8, 16, 24 o 32), adaptándose a escenarios controlados de diversa complejidad.
+\end{itemize}
+
+En conjunto, estas tres fases metodológicas permitieron escalar el modelo hacia un dominio sustancialmente mayor, analizar su capacidad de rechazo ante estímulos inéditos y habilitar una infraestructura más flexible para futuras pruebas experimentales.
+
+
+
+% -------------------- Resultados --------------------
+\section{Resultados}
+
+\subsection{Resultados Cuantitativos por Número de Clases}
+En esta sección se presentan los resultados de desempeño de la memoria para diferentes configuraciones de número de clases (2, 4, 8, 16, 24 y 32). 
+Cada configuración incluye gráficas de precisión y comportamiento promedio de la memoria.
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_02/graph_behaviours_MEAN-english.svg}
+    \caption{Comportamiento promedio de la memoria con 2 clases.}
+    \label{fig:behaviours_2}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_04/graph_behaviours_MEAN-english.svg}
+    \caption{Comportamiento promedio de la memoria con 4 clases.}
+    \label{fig:behaviours_4}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_08/graph_behaviours_MEAN-english.svg}
+    \caption{Comportamiento promedio de la memoria con 8 clases.}
+    \label{fig:behaviours_8}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_16/graph_behaviours_MEAN-english.svg}
+    \caption{Comportamiento promedio de la memoria con 16 clases.}
+    \label{fig:behaviours_16}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_24/graph_behaviours_MEAN-english.svg}
+    \caption{Comportamiento promedio de la memoria con 24 clases.}
+    \label{fig:behaviours_24}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_32/graph_behaviours_MEAN-english.svg}
+    \caption{Comportamiento promedio de la memoria con 32 clases.}
+    \label{fig:behaviours_32}
+\end{figure}
+
+% -----
+
+\subsection{Resultados del Experimento 1 (Todas las clases registradas)}
+Aquí se muestran los resultados cuando la memoria registró todas las clases disponibles. 
+Se incluyen gráficas de recall para distintos tamaños de entrada.
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_08/recall-exp_001-sze_016-graph_prse_MEAN-english.svg}
+    \caption{Recall del experimento 1 con 8 clases (todas registradas).}
+    \label{fig:recall_exp1_8}
+\end{figure}
+
+
+% -----
+
+\subsection{Resultados del Experimento 2 (Rechazo de clases no registradas)}
+En este experimento, la memoria solo registró la mitad de las clases entrenadas. 
+Los resultados muestran cómo aumenta la métrica de \texttt{no\_response} en las clases no vistas.
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_16/recall-exp_002-sze_016-graph_prse_MEAN-english.svg}
+    \caption{Recall del experimento 2 con 16 clases (solo la mitad registradas).}
+    \label{fig:recall_exp2_16}
+\end{figure}
+
+% Repite para 24 y 32 clases
+
+\subsection{Clasificador Base}
+Finalmente, se incluye la matriz de confusión generada por el clasificador previo a la memoria.
+
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.45\textwidth]{Graficas/runs_32/model-classifier-confrix.svg}
+    \caption{Matriz de confusión del clasificador con 32 clases.}
+    \label{fig:classifier_confusion}
+\end{figure}
+
+
+
+
+% -------------------- Discución --------------------
+\section{Discusión}
+Interpretación de resultados y comparación con los hallazgos de Pineda \& Morales (2023). 
+Se discutirá la escalabilidad del modelo y la eficacia en el rechazo de clases desconocidas.
+
+\section{Conclusiones}
+La participación en este proyecto permitió profundizar en el estudio de modelos computacionales inspirados en la cognición humana, específicamente en el diseño y aplicación de memorias asociativas. 
+El modelo mostró potencial para escalar a datasets más complejos y para rechazar estímulos inéditos, reforzando su relevancia como paradigma alternativo en inteligencia artificial.
+
+\section*{Referencias}
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{00}
+\bibitem{pineda2023} Pineda, L. A., \& Morales, R. (2023). Imagery in the entropic associative memory. \textit{Scientific Reports, 13}(1), 9553. https://doi.org/10.1038/s41598-023-36761-6
+\bibitem{morales2024} Morales, R., Pineda, L. A., \& Fuentes, G. (2024). Entropic hetero-associative memory. arXiv:2411.02438. https://arxiv.org/abs/2411.02438
+\bibitem{quickdraw2017} Ha, D., \& Eck, D. (2017). A neural representation of sketch drawings. The Quick, Draw! Dataset. Google Creative Lab. https://quickdraw.withgoogle.com/data
+\bibitem{fashion2017} Zalando Research. (2017). Fashion-MNIST: A Novel Image Dataset for Benchmarking Machine Learning Algorithms. Kaggle. https://www.kaggle.com/datasets/zalando-research/fashionmnist
+\end{thebibliography}
+
+\end{document}
