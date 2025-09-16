@@ -10,8 +10,8 @@
 \title{Validación a gran escala y Análisis de la Capacidad de Rechazo en la Memoria Asociativa Entrópica}
 
 \author{
-    Dr. Rafael Morales Gamboa \\
     Angel Fernando Bórquez Guerrero \\
+    Rafael Morales Gamboa \\
 }
 
 \begin{document}
@@ -20,18 +20,18 @@
 
 % -------------------- Abstract --------------------
 \begin{abstract}
-La Memoria Asociativa Entrópica (EAM), propuesta por Pineda y Morales (2023), constituye un modelo computacional inspirado en la cognición humana que combina propiedades de reconocimiento probabilístico con una arquitectura eficiente de almacenamiento y recuperación de patrones. En estudios previos, la EAM fue evaluada utilizando el dataset Fashion MNIST, obteniendo resultados positivos en la clasificación y reconstrucción de imágenes, aunque con la limitación de operar en un dominio reducido de solo diez clases. 
+La Memoria Asociativa Entrópica (EAM), propuesta por Pineda y Morales (2023), constituye un modelo computacional inspirado en la cognición humana que combina propiedades de reconocimiento probabilístico con una arquitectura eficiente de almacenamiento y recuperación de patrones. En estudios previos, la EAM fue evaluada utilizando el conjunto de datos Fashion MNIST, obteniendo resultados positivos en la clasificación y reconstrucción de imágenes, aunque con la limitación de operar en un dominio reducido de solo diez clases. 
 
-En este trabajo se presentan dos contribuciones principales orientadas a superar estas limitaciones. En primer lugar, se evalúa la escalabilidad del modelo al migrar a un conjunto de datos sustancialmente mayor: Google QuickDraw!, con más de 300 clases y cientos de miles de ejemplos por categoría. En segundo lugar, se diseña un experimento de rechazo que permite verificar si la memoria es capaz de identificar y no reconocer aquellas clases que no fueron almacenadas explícitamente. Para ello, la memoria se entrena con solo la mitad de las clases y se evalúa sobre el conjunto completo, analizando la métrica de \textit{no response} como indicador de rechazo. 
+En este trabajo se presentan dos contribuciones principales orientadas a superar estas limitaciones. En primer lugar, se evalúa la escalabilidad del modelo al migrar a un conjunto de datos sustancialmente mayor: \emph{Quick, Draw!} de Google, con más de 300 clases y cientos de miles de ejemplos por categoría. En segundo lugar, se diseña un experimento de rechazo que permite verificar si la memoria es capaz de identificar y no reconocer aquellas clases que no fueron almacenadas explícitamente. Para ello, la memoria se entrena con solo la mitad de las clases y se evalúa sobre el conjunto completo. 
 
-Los resultados obtenidos confirman que la EAM puede adaptarse a escenarios de mayor complejidad y ofrece un mecanismo efectivo de rechazo frente a estímulos inéditos, aportando evidencia de su potencial como modelo explicable y robusto dentro del campo de la inteligencia artificial.
+Los resultados obtenidos confirman que la EAM puede adaptarse a escenarios de mayor complejidad y sugieren que puede ofrecer un mecanismo efectivo de rechazo frente a estímulos inéditos, aportando evidencia de su potencial como modelo explicable y robusto dentro del campo de la inteligencia artificial.
 \end{abstract}
 
 
 
 % -------------------- Keywords --------------------
 \begin{IEEEkeywords}
-Memoria Asociativa Entrópica, QuickDraw, Fashion MNIST, escalabilidad, open-set recognition
+Memoria Asociativa Entrópica, Quick Draw, Fashion MNIST, escalabilidad, open-set recognition
 \end{IEEEkeywords}
 
 
@@ -39,13 +39,13 @@ Memoria Asociativa Entrópica, QuickDraw, Fashion MNIST, escalabilidad, open-set
 % -------------------- Introducción --------------------
 \section{Introducción}
 
-El desarrollo de modelos de memoria inspirados en la cognición humana constituye un área de investigación en creciente expansión dentro de la inteligencia artificial (IA). Estos enfoques buscan reproducir de manera computacional la capacidad de los sistemas biológicos para almacenar, asociar y recuperar información a partir de experiencias previas. En este contexto, la \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés) propuesta por Pineda y Morales (2023) representa un avance teórico significativo al ofrecer una arquitectura declarativa, distribuida y eficiente, capaz de realizar reconocimiento probabilístico y recuperación flexible de patrones.
+El desarrollo de modelos de memoria inspirados en la cognición humana constituye un área de investigación en creciente expansión dentro de la inteligencia artificial (IA) [REFS]. Estos enfoques buscan reproducir de manera computacional la capacidad de los sistemas biológicos para almacenar, asociar y recuperar información a partir de experiencias previas. En este contexto, la \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés) propuesta por Pineda y Morales \cite{pinedaImageryEntropicAssociative2023} representa un avance teórico significativo al ofrecer una arquitectura declarativa, distribuida y eficiente, capaz de realizar reconocimiento probabilístico y recuperación flexible de patrones.
 
-Los estudios iniciales con la EAM se enfocaron en el dataset \textit{Fashion MNIST} \cite{fashion2017}, un conjunto con 70,000 imágenes pertenecientes a 10 clases de objetos. En este dominio, el modelo demostró ser capaz de almacenar representaciones latentes generadas por un autoencoder convolucional y de recuperar dichas representaciones incluso en presencia de ruido o información incompleta. Estos resultados validaron la eficacia del modelo en tareas de clasificación cerrada, donde todas las clases de prueba habían sido vistas durante el entrenamiento.
+Los estudios iniciales con la EAM se enfocaron en conjuntos de datos clásicos y relativamente pequeños como \textit{Fashion MNIST} \cite{zalandoresearchFashionMNIST2022}, un conjunto con 70,000 imágenes distribuidas en 10 clases de objetos. En este dominio, el modelo demostró ser capaz de almacenar representaciones latentes generadas por un autoencoder convolucional y de recuperar dichas representaciones incluso en presencia de ruido o información incompleta. Estos resultados validaron la eficacia del modelo en tareas de reconocimiento cerrado, donde todas las clases de prueba (no así las instancias) habían sido registradas en memoria.
 
-Sin embargo, el marco experimental original presentaba tres limitaciones principales. En primer lugar, la evaluación se realizó en un dominio pequeño y limitado, lo cual restringía el análisis de escalabilidad del modelo. En segundo lugar, no se había probado de manera explícita la capacidad de la memoria para rechazar clases no entrenadas, un aspecto crítico en problemas de \textit{open-set recognition}. Finalmente, la arquitectura experimental acoplaba el número de clases al entrenamiento de la red neuronal, lo que dificultaba realizar experimentos con subconjuntos variables de categorías.
+Sin embargo, el marco experimental original presentaba tres limitaciones principales. En primer lugar, la evaluación se realizó en un dominio pequeño y limitado, lo cual restringía el análisis de escalabilidad del modelo. En segundo lugar, no se había probado de manera explícita la capacidad de la memoria para rechazar instancias de clases no registradas, un aspecto crítico en problemas de \emph{open-set recognition} \cite{scheirerOpenSetRecognition2013}.
 
-El presente trabajo busca superar estas limitaciones a través de tres líneas de investigación: (1) evaluar la escalabilidad de la EAM utilizando el dataset \textit{QuickDraw!} \cite{quickdraw2017}, con más de 300 clases y cientos de miles de ejemplos por categoría; (2) diseñar un experimento de rechazo que permita verificar si la memoria puede identificar y no reconocer clases no almacenadas; y (3) refactorizar el sistema para habilitar un marco experimental más flexible y controlable en términos del número de clases evaluadas.
+El presente trabajo busca superar estas limitaciones a través de dos líneas de investigación: (1) evaluar la escalabilidad de la EAM utilizando el conjunto de datos \textit{Quick, Draw!} \cite{googlecreativelabQuickDrawData2025}, con más de 300 clases y cientos de miles de ejemplos por categoría; (2) diseñar un experimento de rechazo que permita observar el desempeño de la memoria en no reconocer clases no almacenadas.
 
 De esta manera, el artículo contribuye a ampliar la comprensión del comportamiento de la Memoria Asociativa Entrópica en escenarios más complejos, aportando evidencia empírica sobre su robustez, su capacidad de generalización y su potencial como paradigma alternativo dentro de la inteligencia artificial explicable.
 
@@ -54,33 +54,33 @@ De esta manera, el artículo contribuye a ampliar la comprensión del comportami
 % -------------------- Antecedentes --------------------
 \section{Antecedentes}
 
-La \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés), propuesta por Pineda y Morales \cite{pineda2023}, surge como un modelo computacional inspirado en la cognición humana cuyo propósito es almacenar y recuperar patrones de manera probabilística y distribuida. A diferencia de los sistemas de memoria convencionales, la EAM opera sobre un único registro asociativo (\textit{Associative Memory Register}) que concentra las asociaciones de todos los patrones aprendidos en una representación matricial. Este enfoque permite un comportamiento flexible en el reconocimiento y la recuperación, y abre la puerta al estudio de fenómenos emergentes como la generalización y la generación de imágenes sintéticas.
+La \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés), propuesta por Pineda y Morales \cite{pinedaImageryEntropicAssociative2023}, surge como un modelo computacional inspirado en la cognición humana cuyo propósito es almacenar y recuperar patrones de manera probabilística y distribuida. A diferencia de los sistemas de memoria convencionales, la EAM opera sobre un único registro asociativo (\textit{Associative Memory Register}) que concentra las asociaciones de todos los patrones aprendidos en una representación matricial. Este enfoque permite un comportamiento flexible en el reconocimiento y la recuperación, y abre la puerta al estudio de fenómenos emergentes como la generalización y la generación de imágenes sintéticas.
 
 El modelo se fundamenta en tres operaciones principales: 
 \begin{itemize}
     \item \textbf{$\lambda$-register}: registra un patrón en la memoria reforzando las asociaciones entre sus características.
-    \item \textbf{$\eta$-recognition}: determina si un estímulo de entrada puede ser reconocido por la memoria, utilizando un criterio de tolerancia a errores y umbrales de confianza.
-    \item \textbf{$\beta$-retrieval}: recupera un patrón completo a partir de una pista parcial o con ruido, utilizando distribuciones probabilísticas sobre las asociaciones almacenadas.
+    \item \textbf{$\eta$-recognition}: determina si un estímulo de entrada es reconocido por la memoria, utilizando un criterio de tolerancia a errores y umbrales de confianza.
+    \item \textbf{$\beta$-retrieval}: recupera un patrón completo a partir de una pista, que puede ser parcial o con ruido, utilizando distribuciones probabilísticas sobre las asociaciones almacenadas.
 \end{itemize}
 
-En experimentos previos, la EAM fue evaluada con el dataset \textit{Fashion MNIST} \cite{fashion2017}, compuesto por 70,000 imágenes distribuidas en 10 clases. En este escenario, la memoria fue alimentada con representaciones latentes producidas por un autoencoder convolucional, y demostró capacidad tanto para reconocer como para reconstruir patrones aún en condiciones de ruido o información incompleta. Asimismo, se exploraron fenómenos emergentes como la generación de secuencias de recuerdos (\textit{association chains}), mostrando la capacidad del sistema para transitar entre representaciones almacenadas.
+En experimentos previos, la EAM fue evaluada con el conjunto de datos \textit{Fashion MNIST} \cite{zalandoresearchFashionMNIST2022}, compuesto por 70,000 imágenes distribuidas en 10 clases. En este escenario, la memoria fue alimentada con representaciones latentes producidas por un autoencoder convolucional, y demostró capacidad tanto para reconocer como para reconstruir patrones aún en condiciones de ruido o información incompleta. Asimismo, se exploraron fenómenos emergentes como la generación de secuencias de recuerdos (\textit{association chains}), mostrando la capacidad del sistema para transitar entre representaciones almacenadas. Posteriormente, se realizó un primer estudio utilizando el conjunto de datos \emph{Quick, Draw!} de Google, con pequeñas variaciones en el número de clases (entre 10 y 13), con resultados aceptables \cite{gonzalez2024clasificador}.
 
 A pesar de estos resultados prometedores, el marco experimental original presentaba limitaciones relevantes: 
 (1) la evaluación se restringió a un conjunto reducido de 10 clases, lo que dificultaba analizar la escalabilidad del modelo en contextos más complejos; 
 (2) no se realizaron pruebas sistemáticas sobre la capacidad de la memoria para rechazar patrones de clases no vistas, un aspecto fundamental en el reconocimiento de conjuntos abiertos; y 
 (3) el diseño experimental estaba acoplado al número fijo de clases configuradas en las redes neuronales, limitando la flexibilidad para explorar diferentes configuraciones de carga de memoria.
 
-Estas limitaciones motivan el presente trabajo, cuyo objetivo es validar la EAM en un entorno más desafiante mediante la migración al dataset \textit{QuickDraw!} \cite{quickdraw2017} y el diseño de un experimento específico para analizar su capacidad de rechazo frente a clases inéditas.
+Estas limitaciones motivan el presente trabajo, cuyo objetivo es validar la EAM en un entorno más desafiante mediante la migración al conjunto de datos \textit{Quick, Draw!} \cite{googlecreativelabQuickDrawData2025} y el diseño de un experimento específico para analizar su capacidad de rechazo frente a clases inéditas.
 
 
 
 % -------------------- Metodología --------------------
 \section{Metodología}
 
-Con el objetivo de extender la validación del modelo de Memoria Asociativa Entrópica (EAM) y analizar su comportamiento en escenarios más complejos, se diseñó una metodología experimental dividida en tres fases principales. Estas fases permitieron migrar a un nuevo dominio de datos, implementar un mecanismo de rechazo explícito y dotar al sistema de mayor flexibilidad para futuros experimentos.
+Con el objetivo de extender la validación del modelo de Memoria Asociativa Entrópica (EAM) y analizar su comportamiento en escenarios más complejos, se diseñó una metodología experimental dividida en tres fases principales. Estas fases permitieron migrar a un nuevo dominio de datos, evaluar el mecanismo de rechazo explícito y dotar al sistema de mayor flexibilidad para futuros experimentos.
 
-\subsection{Migración del Dataset y Validación a Gran Escala}
-El primer paso consistió en reemplazar el conjunto de datos \textit{Fashion MNIST} por \textit{QuickDraw!} \cite{quickdraw2017}, con más de 300 clases y cientos de miles de ejemplos por categoría. Este proceso requirió:
+\subsection{Migración del Conjunto de Datos y Validación a Gran Escala}
+El primer paso consistió en reemplazar el conjunto de datos \textit{Fashion MNIST} por \textit{QuickDraw!} \cite{googlecreativelabQuickDrawData2025}, con más de 300 clases y cientos de miles de ejemplos por categoría. Este proceso requirió:
 \begin{itemize}
     \item \textbf{Adaptación del módulo de datos:} Se modificó el script \texttt{dataset.py} para cargar, procesar y balancear dinámicamente clases de QuickDraw. La lógica se ajustó para manejar un número variable de categorías y garantizar un número equitativo de muestras por clase.
     \item \textbf{Reentrenamiento de las redes neuronales:} Se entrenó desde cero el sistema perceptivo definido en \texttt{neural\_net.py} (autoencoder y clasificador) utilizando QuickDraw como nueva fuente de datos. Este paso generó representaciones latentes (\textit{features}) adecuadas para la memoria.
@@ -552,11 +552,5 @@ Como trabajo futuro, se propone extender los experimentos hacia dominios aún m�
 
 % -------------------- Referencias --------------------
 \bibliographystyle{IEEEtran}
-\begin{thebibliography}{00}
-\bibitem{pineda2023} Pineda, L. A., \& Morales, R. (2023). Imagery in the entropic associative memory. \textit{Scientific Reports, 13}(1), 9553. https://doi.org/10.1038/s41598-023-36761-6
-\bibitem{morales2024} Morales, R., Pineda, L. A., \& Fuentes, G. (2024). Entropic hetero-associative memory. arXiv:2411.02438. https://arxiv.org/abs/2411.02438
-\bibitem{quickdraw2017} Ha, D., \& Eck, D. (2017). A neural representation of sketch drawings. The Quick, Draw! Dataset. Google Creative Lab. https://quickdraw.withgoogle.com/data
-\bibitem{fashion2017} Zalando Research. (2017). Fashion-MNIST: A Novel Image Dataset for Benchmarking Machine Learning Algorithms. Kaggle. https://www.kaggle.com/datasets/zalando-research/fashionmnist
-\end{thebibliography}
-
+\bibliography{articulo}
 \end{document}
