@@ -1,11 +1,14 @@
 \documentclass[conference]{IEEEtran} % puedes cambiar a article si prefieres
 
-\usepackage[utf8]{inputenc}
+%% IEEE Trans parece requerir el uso de PDFLaTeX
+\usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{cite}
 \usepackage{float}
+\usepackage{booktabs}
+\usepackage[spanish]{babel}
 
 \title{Validación a gran escala y Análisis de la Capacidad de Rechazo en la Memoria Asociativa Entrópica}
 
@@ -112,171 +115,106 @@ En conjunto, estas tres fases metodológicas permitieron escalar el modelo hacia
 
 \section{Resultados}
 
-\subsection{Resultados cuantitativos por Número de Clases}
-En esta subsección se muestran las gráficas que resumen el comportamiento promedio y la precisión de la memoria al variar el número de clases (2, 4, 8, 16, 24 y 32). 
+\subsection{Resultados cuantitativos por número de clases}
+\indent En esta sección se presenta el desempeño del autoencodificador-clasificador y la memoria asociativa entrópica al variar el número de clases. De las 345 clases que contiene el conjunto de datos \emph{Quick, Draw!} se seleccionaron 64 en total, se revolvieron aleatoriamente y del conjunto resultante se fueron tomando las primeras 2, 4, 8, 16, 24 y 32 clases. El conjunto de datos resultante en cada caso se dividió en tres: el corpus de entrenamiento del autocodificador-clasificador, el corpus de llenado de la memoria asociativa entrópica y el corpus de prueba de ambos. Por cuestiones de tiempo y limitaciones en la cantidad de memoria del servidor, no se hicieron pruebas con más clases y solamente se ejecutó una sola validación por número de clases, en vez de la validación cruzada. Sin embargo, la coherencia de los resultados sugiere que estos no están lejos de lo que se obtendría con una validación cruzada.
+
+Como en \cite{pinedaImageryEntropicAssociative2023} y \cite{moralesMissingCueProblem2025}, las redes neuronales que implementan el autocodificador y el clasificador fueron entrenadas conjuntamente. El Cuadro~\ref{tab:autoencoder-classifier-performance} presenta su desempeño en el conjunto de prueba para las distintas cantidades de clases tomadas del conjunto de datos. Como se puede observar, el desempeño del clasificador tiende a bajar conforme aumenta el número de clases, pero se mantuvo arriba del 91\% de exactitud. El desempeño del autocodificador se mantiene un poco más estable, con una diferencia menor al 3\% entre todos los casos.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Desempeño del autocodificador (raíz cuadrada del error promedio) y el clasificador (exactitud) para distintas cantidades de clases.}
+	\begin{tabular}{@{}ccc@{}}\toprule
+		No. de clases & Exactitud &  Error \\
+		\midrule
+		2 & 0.976 & 0.218 \\
+		4 & 0.950 & 0.215 \\
+		8 & 0.921 & 0.204 \\
+		16 & 0.914 & 0.218 \\
+		24	& 0.917 & 0.228 \\
+		32 & 0.917 & 0.229 \\
+		\bottomrule
+	\end{tabular}
+	\label{tab:autoencoder-classifier-performance}
+\end{table}
+
+\subsection{Resultados del experimento de reconocimiento (todas las clases registradas en memoria)}
+\noindent En este experimento la memoria almacenó todas las clases disponibles, con las que las redes neuronales fueron entrenadas y evaluadas. Las figuras de la \ref{fig:precision_2} a la \ref{fig:precision_32} muestran los desempeños correspondientes de la memoria asociativa entrópica usando las métricas de precisión y exactitud. En todos los casos se mantuvo el mismo número de columnas en la memoria (256) y se varió el número de renglones en potencias de dos, desde 2 hasta 1024. De manera general, se puede observar que los desempeños con 4 o más renglones fueron muy similares entre sí y similares a los obtenidos por el clasificador.
 
 % -- 2 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/graph_behaviours_MEAN-english.pdf}
-    \caption{Comportamiento promedio de la memoria con 2 clases.}
-    \label{fig:behaviours_2}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_02/graph_prse_MEAN-english.pdf}
-    \caption{Precisión global del sistema con 2 clases.}
+    \caption{Precisión y exactitud de la memoria asociativa con 2 clases.}
     \label{fig:precision_2}
 \end{figure}
 
 % -- 4 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/graph_behaviours_MEAN-english.pdf}
-    \caption{Comportamiento promedio de la memoria con 4 clases.}
-    \label{fig:behaviours_4}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_04/graph_prse_MEAN-english.pdf}
-    \caption{Precisión global del sistema con 4 clases.}
+    \caption{Precisión y exactitud de la memoria asociativa con 4 clases.}
     \label{fig:precision_4}
 \end{figure}
 
 % -- 8 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/graph_behaviours_MEAN-english.pdf}
-    \caption{Comportamiento promedio de la memoria con 8 clases.}
-    \label{fig:behaviours_8}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_08/graph_prse_MEAN-english.pdf}
-    \caption{Precisión global del sistema con 8 clases.}
+    \caption{Precisión y exactitud de la memoria asociativa con 8 clases.}
     \label{fig:precision_8}
 \end{figure}
 
 % -- 16 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/graph_behaviours_MEAN-english.pdf}
-    \caption{Comportamiento promedio de la memoria con 16 clases.}
-    \label{fig:behaviours_16}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_16/graph_prse_MEAN-english.pdf}
-    \caption{Precisión global del sistema con 16 clases.}
+    \caption{Precisión y exactitud de la memoria asociativa con 16 clases.}
     \label{fig:precision_16}
 \end{figure}
 
 % -- 24 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_24/graph_behaviours_MEAN-english.pdf}
-    \caption{Comportamiento promedio de la memoria con 24 clases.}
-    \label{fig:behaviours_24}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_24/graph_prse_MEAN-english.pdf}
-    \caption{Precisión global del sistema con 24 clases.}
+    \caption{Precisión y exactitud de la memoria asociativa con 24 clases.}
     \label{fig:precision_24}
 \end{figure}
 
 % -- 32 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_32/graph_behaviours_MEAN-english.pdf}
-    \caption{Comportamiento promedio de la memoria con 32 clases.}
-    \label{fig:behaviours_32}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_32/graph_prse_MEAN-english.pdf}
-    \caption{Precisión global del sistema con 32 clases.}
+    \caption{Precisión y exactitud de la memoria asociativa con 32 clases.}
     \label{fig:precision_32}
 \end{figure}
 
 
 % --------------------
+\noindent Para observar el desempeño de la memoria conforme se va llenando de recuerdos, para cada cantidad de clases se selecciono un número de renglones con buen desempeño y se observó el comportamiento de la precisión y la exactitud de la memoria conforme se fue llenando en porcentajes que también variaron en potencias de dos. Las figuras de la \ref{fig:recall_exp1_2_004} a la \ref{fig:recall_exp1_32_016} presentan los resultados obtenidos. En general, se puede decir que el desempeño de la memoria se mantiene cuando se llena con al menos el 8\% del corpus de llenado.
 
-
-\subsection{Resultados del Experimento 1 (Todas las clases registradas)}
-En este experimento, la memoria almacenó todas las clases disponibles. Se presentan las gráficas de recall correspondientes a diferentes configuraciones de tamaño de memoria (\texttt{sze}).
 
 % -- 2 Clases
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_001-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 2 clases y tamaño de memoria \texttt{sze=004}.}
+    \caption{Resultados del experimento de reconocimiento con 2 clases y memoria con 4 renglones.}
     \label{fig:recall_exp1_2_004}
 \end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_001-sze_008-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 2 clases y tamaño de memoria \texttt{sze=008}.}
-    \label{fig:recall_exp1_2_008}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_001-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 2 clases y tamaño de memoria \texttt{sze=032}.}
-    \label{fig:recall_exp1_2_032}
-\end{figure}
-
 
 % -- 4 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_001-sze_002-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 4 clases y tamaño de memoria \texttt{sze=002}.}
-    \label{fig:recall_exp1_4_002}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_001-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 4 clases y tamaño de memoria \texttt{sze=004}.}
-    \label{fig:recall_exp1_4_004}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 4 clases y tamaño de memoria \texttt{sze=016}.}
-    \label{fig:recall_exp1_4_016}
+    \caption{Resultados del experimento de reconocimiento con 4 clases y memoria con 32 renglones.}
+    \label{fig:recall_exp1_4_032}
 \end{figure}
 
 
 % -- 8 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_001-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 8 clases y tamaño de memoria \texttt{sze=004}.}
-    \label{fig:recall_exp1_8_004}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_001-sze_008-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 8 clases y tamaño de memoria \texttt{sze=008}.}
-    \label{fig:recall_exp1_8_008}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 8 clases y tamaño de memoria \texttt{sze=016}.}
+    \caption{Resultados del experimento de reconocimiento con 8 clases y memoria con 16 renglones.}
     \label{fig:recall_exp1_8_016}
 \end{figure}
 
@@ -284,22 +222,8 @@ En este experimento, la memoria almacenó todas las clases disponibles. Se prese
 % -- 16 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_001-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 16 clases y tamaño de memoria \texttt{sze=004}.}
-    \label{fig:recall_exp1_16_004}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_001-sze_008-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 16 clases y tamaño de memoria \texttt{sze=008}.}
-    \label{fig:recall_exp1_16_008}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 16 clases y tamaño de memoria \texttt{sze=016}.}
+    \caption{Resultados del experimento de reconocimiento con 16 clases y memoria con 16 renglones.}
     \label{fig:recall_exp1_16_016}
 \end{figure}
 
@@ -308,82 +232,38 @@ En este experimento, la memoria almacenó todas las clases disponibles. Se prese
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_24/recall-exp_001-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 24 clases y tamaño de memoria \texttt{sze=032}.}
+    \caption{Resultados del experimento de reconocimiento con 24 clases y memoria con 32 renglones.}
     \label{fig:recall_exp1_24_032}
 \end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_24/recall-exp_001-sze_064-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 24 clases y tamaño de memoria \texttt{sze=064}.}
-    \label{fig:recall_exp1_24_064}
-\end{figure}
-
 
 % -- 32 Clases
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_32/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 32 clases y tamaño de memoria \texttt{sze=016}.}
+    \caption{Resultados del experimento de reconocimiento con 32 clases y memoria con 16 renglones.}
     \label{fig:recall_exp1_32_016}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_32/recall-exp_001-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 1 con 32 clases y tamaño de memoria \texttt{sze=032}.}
-    \label{fig:recall_exp1_32_032}
 \end{figure}
 
 
 % --------------------
 
 
-\subsection{Resultados del Experimento 2 (Rechazo de clases no registradas)}
-En este experimento, la memoria solo registró la mitad de las clases, pero se evaluó contra el conjunto completo. Se muestran las gráficas de recall, destacando la métrica \texttt{no\_response} como indicador de rechazo.
+\subsection{Resultados del experimento de rechazo de clases no registradas}
+\noindent En este experimento solamente se registró en la memoria la primera mitad de las clases, pero se evaluó contra el conjunto completo. Para cada cantidad de clases se seleccionó el mismo número de renglones para la memoria que en el experimento anterior (figuras de la \ref{fig:recall_exp1_2_004} a la \ref{fig:recall_exp1_32_016}) y se observó el desempeño de la memoria conforme se fue llenando. Las figuras de la \ref{fig:recall_exp2_2_004} a la \ref{fig:recall_exp2_32_016} presentan las gráficas de precisión y exactitud correspondientes. Se puede observar como el desempeño de la memoria comienza muy bien con dos clases y poca información registrada en ella, y va disminuyendo conforme se incrementan tanto el número de clases como la cantidad de elementos del corpus de llenado que se registra en la memoria.
 
 % -- 2 Clases
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_002-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 2 clases y tamaño de memoria \texttt{sze=004}.}
+    \caption{Resultados del experimento de rechazo con 2 clases y memoria con 4 renglones.}
     \label{fig:recall_exp2_2_004}
 \end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_002-sze_008-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 2 clases y tamaño de memoria \texttt{sze=008}.}
-    \label{fig:recall_exp2_2_008}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_002-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 2 clases y tamaño de memoria \texttt{sze=032}.}
-    \label{fig:recall_exp2_2_032}
-\end{figure}
-
 
 % -- 4 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_002-sze_002-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 4 clases y tamaño de memoria \texttt{sze=002}.}
-    \label{fig:recall_exp2_4_002}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_002-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 4 clases y tamaño de memoria \texttt{sze=004}.}
-    \label{fig:recall_exp2_4_004}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_002-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 4 clases y tamaño de memoria \texttt{sze=032}.}
+    \caption{Resultados del experimento de rechazo con 4 clases y memoria con 32 renglones.}
     \label{fig:recall_exp2_4_032}
 \end{figure}
 
@@ -391,22 +271,8 @@ En este experimento, la memoria solo registró la mitad de las clases, pero se e
 % -- 8 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_002-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 8 clases y tamaño de memoria \texttt{sze=004}.}
-    \label{fig:recall_exp2_8_004}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_002-sze_008-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 8 clases y tamaño de memoria \texttt{sze=008}.}
-    \label{fig:recall_exp2_8_008}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_002-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 8 clases y tamaño de memoria \texttt{sze=016}.}
+    \caption{Resultados del experimento de rechazo con 8 clases y memoria con 16 renglones.}
     \label{fig:recall_exp2_8_016}
 \end{figure}
 
@@ -414,22 +280,8 @@ En este experimento, la memoria solo registró la mitad de las clases, pero se e
 % -- 16 Clases
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_002-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 16 clases y tamaño de memoria \texttt{sze=004}.}
-    \label{fig:recall_exp2_16_004}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_002-sze_008-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 16 clases y tamaño de memoria \texttt{sze=008}.}
-    \label{fig:recall_exp2_16_008}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_002-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 16 clases y tamaño de memoria \texttt{sze=016}.}
+    \caption{Resultados del experimento de rechazo con 16 clases y memoria con 16 renglones.}
     \label{fig:recall_exp2_16_016}
 \end{figure}
 
@@ -438,80 +290,16 @@ En este experimento, la memoria solo registró la mitad de las clases, pero se e
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_24/recall-exp_002-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 24 clases y tamaño de memoria \texttt{sze=032}.}
+    \caption{Resultados del experimento de rechazo con 24 clases y memoria con 32 renglones.}
     \label{fig:recall_exp2_24_032}
 \end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_24/recall-exp_002-sze_064-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 24 clases y tamaño de memoria \texttt{sze=064}.}
-    \label{fig:recall_exp2_24_064}
-\end{figure}
-
 
 % -- 32 Clases
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{Graficas/runs_32/recall-exp_002-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 32 clases y tamaño de memoria \texttt{sze=016}.}
+    \caption{Resultados del experimento de rechazo con 32 clases y memoria con 16 renglones.}
     \label{fig:recall_exp2_32_016}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_32/recall-exp_002-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Recall del experimento 2 con 32 clases y tamaño de memoria \texttt{sze=032}.}
-    \label{fig:recall_exp2_32_032}
-\end{figure}
-
-
-% --------------------
-
-
-\subsection{Clasificador base}
-Finalmente, se incluyen las matrices de confusión generadas por el clasificador previo a la memoria para cada configuración de clases.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/model-classifier-confrix.pdf}
-    \caption{Matriz de confusión del clasificador base con 02 clases.}
-    \label{fig:classifier_2}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/model-classifier-confrix.pdf}
-    \caption{Matriz de confusión del clasificador base con 4 clases.}
-    \label{fig:classifier_4}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/model-classifier-confrix.pdf}
-    \caption{Matriz de confusión del clasificador base con 8 clases.}
-    \label{fig:classifier_8}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/model-classifier-confrix.pdf}
-    \caption{Matriz de confusión del clasificador base con 16 clases.}
-    \label{fig:classifier_16}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_24/model-classifier-confrix.pdf}
-    \caption{Matriz de confusión del clasificador base con 24 clases.}
-    \label{fig:classifier_24}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_32/model-classifier-confrix.pdf}
-    \caption{Matriz de confusión del clasificador base con 32 clases.}
-    \label{fig:classifier_32}
 \end{figure}
 
 
@@ -523,7 +311,7 @@ Los resultados experimentales permiten extraer varias observaciones relevantes s
 
 En primer lugar, al aumentar progresivamente el número de clases (2, 4, 8, 16, 24 y 32), se observó una tendencia general a la disminución en las métricas de precisión y recall. Este comportamiento es esperado, ya que la complejidad del dominio y la variabilidad de los patrones crece con el número de categorías. No obstante, la EAM mantuvo un desempeño estable en configuraciones de baja y media complejidad, lo que confirma su capacidad para escalar más allá del dominio reducido de Fashion MNIST.
 
-En segundo lugar, los experimentos de rechazo (Experimento 2) evidenciaron que la memoria fue capaz de identificar patrones correspondientes a clases no registradas y responder con un índice elevado de \texttt{no\_response}. Este resultado constituye una validación empírica de la hipótesis de que la EAM puede operar en escenarios de reconocimiento abierto, diferenciando entre estímulos familiares y no familiares. Sin embargo, también se detectaron casos de falsos rechazos en clases registradas, lo que sugiere la necesidad de ajustar parámetros de umbral o explorar mecanismos complementarios de discriminación.
+En segundo lugar, los experimentos de rechazo evidenciaron que la memoria fue capaz de identificar patrones correspondientes a clases registradas en ella y rechazar las instancias de las clases no registradas. Este resultado constituye una validación empírica de la hipótesis de que la EAM puede operar en escenarios de reconocimiento abierto, diferenciando entre estímulos familiares y no familiares. Sin embargo, también se detectaron casos de falsas aceptaciones en clases no registradas conforme aumentó el número de clases o el porcentaje del corpus de llenado registrado en la memoria, lo que sugiere la necesidad de ajustar parámetros de umbral ($\iota$ y $\kappa$ \cite{pinedaImageryEntropicAssociative2023,moralesMissingCueProblem2025}), probar otros números de renglones o explorar mecanismos complementarios de discriminación.
 
 Finalmente, la comparación con el clasificador base resalta el papel de la memoria en el sistema completo. Mientras que el clasificador aporta representaciones latentes útiles, es la EAM la que confiere la capacidad de rechazo y recuperación probabilística, aportando un valor añadido frente a arquitecturas puramente discriminativas.
 
