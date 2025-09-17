@@ -9,12 +9,12 @@
 \usepackage{float}
 \usepackage{booktabs}
 
-\title{Validación a gran escala y Análisis de la Capacidad de Rechazo en la Memoria Asociativa Entrópica}
+\title{Large-Scale Validation and Analysis of the Rejection Capacity in Entropic Associative Memory}
 
-\author{
-    Angel Fernando Bórquez Guerrero \\
-    Rafael Morales Gamboa \\
-}
+%\author{
+%    Angel Fernando Bórquez Guerrero \\
+%    Rafael Morales Gamboa \\
+%}
 
 \begin{document}
 
@@ -96,7 +96,7 @@ These limitations motivate the present work, whose goal is to validate EAM in a 
     \item \textbf{Extension of the command interface:} A new argument was added to the main program \texttt{eam.py} (\texttt{-e 2}) to invoke this experimental mode.
     \item \textbf{Partial memory registration:} Although the classifier was trained with all selected classes, only half of them were stored in EAM.
     \item \textbf{Evaluation with the complete set:} During the test phase, the system was exposed to all classes, including those not stored, enabling explicit evaluation of its rejection response.
-    \item \textbf{Acceptance and rejection metric:} The \texttt{no\_response} index was employed as a quantitative measure to evaluate the system’s ability to avoid associating patterns from unseen classes.
+    \item \textbf{Acceptance and rejection metric:} The \texttt{rejection\_response} index was employed as a quantitative measure to evaluate the system’s ability to avoid associating patterns from unseen classes.
 \end{itemize}
 
 \subsection{Refactoring for Experimental Flexibility}
