@@ -8,7 +8,6 @@
 \usepackage{cite}
 \usepackage{float}
 \usepackage{booktabs}
-\usepackage[spanish]{babel}
 
 \title{Validación a gran escala y Análisis de la Capacidad de Rechazo en la Memoria Asociativa Entrópica}
 
@@ -305,37 +304,34 @@ Como en \cite{pinedaImageryEntropicAssociative2023} y \cite{moralesMissingCuePro
 
 
 % -------------------- Discución --------------------
-\section{Discusión}
+\section{Discussion}
+\noindent The experimental results allow for several relevant observations about the behavior of the Entropic Associative Memory (EAM) in more complex scenarios.
 
-Los resultados experimentales permiten extraer varias observaciones relevantes sobre el comportamiento de la Memoria Asociativa Entrópica (EAM) en escenarios de mayor complejidad.
+Firstly, by progressively increasing the number of classes, a general trend of decreasing precision and recall metrics was observed. This behavior is expected, as the domain complexity and pattern variability grow with the number of categories. Nevertheless, the EAM maintained stable performance in low and medium-complexity configurations, which confirms its ability to scale beyond the reduced Fashion MNIST domain.
 
-En primer lugar, al aumentar progresivamente el número de clases (2, 4, 8, 16, 24 y 32), se observó una tendencia general a la disminución en las métricas de precisión y recall. Este comportamiento es esperado, ya que la complejidad del dominio y la variabilidad de los patrones crece con el número de categorías. No obstante, la EAM mantuvo un desempeño estable en configuraciones de baja y media complejidad, lo que confirma su capacidad para escalar más allá del dominio reducido de Fashion MNIST.
+Secondly, the rejection experiments showed that the memory was capable of identifying patterns corresponding to classes registered within it and rejecting instances of unregistered classes. This result provides empirical validation for the hypothesis that EAM can operate in open-set recognition scenarios, differentiating between familiar and unfamiliar stimuli. However, cases of false acceptances for instances of unregistered classes were also detected as the number of classes, or the percentage of the corpus filled in the memory, increased. This suggests a need to adjust threshold parameters ($\iota$ and $\kappa$ \cite{pinedaImageryEntropicAssociative2023,moralesMissingCueProblem2025}), try other row numbers, or explore complementary discrimination mechanisms.
 
-En segundo lugar, los experimentos de rechazo evidenciaron que la memoria fue capaz de identificar patrones correspondientes a clases registradas en ella y rechazar las instancias de las clases no registradas. Este resultado constituye una validación empírica de la hipótesis de que la EAM puede operar en escenarios de reconocimiento abierto, diferenciando entre estímulos familiares y no familiares. Sin embargo, también se detectaron casos de falsas aceptaciones en clases no registradas conforme aumentó el número de clases o el porcentaje del corpus de llenado registrado en la memoria, lo que sugiere la necesidad de ajustar parámetros de umbral ($\iota$ y $\kappa$ \cite{pinedaImageryEntropicAssociative2023,moralesMissingCueProblem2025}), probar otros números de renglones o explorar mecanismos complementarios de discriminación.
+Finally, the comparison with the baseline classifier highlights the role of the memory in the complete system. While the classifier provides useful latent representations, it is the EAM that confers the probabilistic rejection and retrieval capability, providing added value compared to purely discriminative architectures.
 
-Finalmente, la comparación con el clasificador base resalta el papel de la memoria en el sistema completo. Mientras que el clasificador aporta representaciones latentes útiles, es la EAM la que confiere la capacidad de rechazo y recuperación probabilística, aportando un valor añadido frente a arquitecturas puramente discriminativas.
-
-En conjunto, estos hallazgos demuestran que la EAM no solo puede adaptarse a dominios más complejos, sino que también ofrece un mecanismo efectivo para tratar con información novedosa. Al mismo tiempo, ponen de manifiesto retos futuros relacionados con la optimización de sus parámetros y la evaluación en dominios aún más grandes y heterogéneos.
-
+Collectively, these findings demonstrate that EAM can not only adapt to more complex domains but also offers an effective mechanism for handling novel information. At the same time, they highlight future challenges related to optimizing its parameters and evaluating it in even larger and more heterogeneous domains.
 
 
 % -------------------- Conclusiones --------------------
-\section{Conclusiones}
+\section{Conclusions}
 
-Este trabajo amplió el marco experimental de la Memoria Asociativa Entrópica (EAM) para evaluar su desempeño en escenarios de mayor complejidad y analizar su capacidad de rechazo ante clases no registradas. Las principales contribuciones pueden resumirse de la siguiente manera:
+\noindent This work extended the experimental framework of the Entropic Associative Memory (EAM) to evaluate its performance in more complex scenarios and analyze its rejection capacity for unregistered classes. The main contributions can be summarized as follows:
 
 \begin{itemize}
-    \item \textbf{Validación a gran escala:} Se migró de un dominio reducido de diez clases en Fashion MNIST a un dominio más amplio y diverso utilizando \emph{Quick, Draw!}, con resultados que confirman la capacidad del modelo para escalar en contextos con cientos de clases y mayor variabilidad en los patrones.
+    \item \textbf{Large-scale validation:} We migrated from a reduced domain of ten classes in Fashion MNIST to a wider and more diverse domain using \emph{Quick, Draw!}, with results that confirm the model's ability to scale in contexts with much more classes and greater variability in patterns.
     
-    \item \textbf{Capacidad de rechazo:} Se diseñó e implementó un nuevo experimento que mostró empíricamente cómo la EAM es capaz de emitir una respuesta de \texttt{no\_response} frente a estímulos correspondientes a clases no vistas, validando su utilidad en problemas de reconocimiento abierto.
+    \item \textbf{Rejection capacity:} A new experiment was designed and implemented, empirically showing how the EAM is capable of issuing a rejection to stimuli corresponding to unseen classes, validating its usefulness in open-set recognition problems.
     
-    \item \textbf{Flexibilidad experimental:} El sistema fue refactorizado para aceptar un número variable de clases y distintos tamaños de memoria, lo que habilita un entorno más versátil para la exploración de configuraciones y análisis comparativos.
+    \item \textbf{Experimental flexibility:} The system was refactored to accept a variable number of classes and different memory sizes, which enables a more versatile environment for exploring configurations and comparative analysis.
 \end{itemize}
 
-Los hallazgos obtenidos demuestran que la EAM constituye un modelo explicable y robusto, capaz de combinar el almacenamiento distribuido con mecanismos probabilísticos de recuperación y rechazo. Estos resultados refuerzan su potencial como paradigma alternativo dentro de la inteligencia artificial, particularmente en tareas donde la capacidad de manejar información novedosa resulta crítica.
+\noindent The findings demonstrate that the EAM is an explainable and robust model, capable of combining distributed storage with probabilistic retrieval and rejection mechanisms. These results reinforce its potential as an alternative paradigm within artificial intelligence, particularly in tasks where the ability to handle novel information is critical.
 
-Como trabajo futuro, se propone extender los experimentos hacia dominios aún más grandes y heterogéneos, optimizar los parámetros de umbral asociados al rechazo, e investigar la integración de la EAM con arquitecturas de aprendizaje profundo más avanzadas para fortalecer tanto su precisión como su capacidad de generalización.
-
+For future work, it is proposed to extend the experiments to even larger and more heterogeneous domains, to optimize the threshold parameters associated with rejection, and investigate the integration of EAM with more advanced deep learning architectures to strengthen both its accuracy and generalization capacity.
 
 
 % -------------------- Referencias --------------------
