@@ -39,7 +39,7 @@ Memoria Asociativa Entrópica, Quick Draw, Fashion MNIST, escalabilidad, open-se
 % -------------------- Introducción --------------------
 \section{Introducción}
 
-El desarrollo de modelos de memoria inspirados en la cognición humana constituye un área de investigación en creciente expansión dentro de la inteligencia artificial (IA) [REFS]. Estos enfoques buscan reproducir de manera computacional la capacidad de los sistemas biológicos para almacenar, asociar y recuperar información a partir de experiencias previas. En este contexto, la \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés) propuesta por Pineda y Morales \cite{pinedaImageryEntropicAssociative2023} representa un avance teórico significativo al ofrecer una arquitectura declarativa, distribuida y eficiente, capaz de realizar reconocimiento probabilístico y recuperación flexible de patrones.
+\noindent El desarrollo de modelos de memoria inspirados en la cognición humana constituye un área de investigación en creciente expansión dentro de la inteligencia artificial (IA) [REFS]. Estos enfoques buscan reproducir de manera computacional la capacidad de los sistemas biológicos para almacenar, asociar y recuperar información a partir de experiencias previas. En este contexto, la \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés) propuesta por Pineda y Morales \cite{pinedaImageryEntropicAssociative2023} representa un avance teórico significativo al ofrecer una arquitectura declarativa, distribuida y eficiente, capaz de realizar reconocimiento probabilístico y recuperación flexible de patrones.
 
 Los estudios iniciales con la EAM se enfocaron en conjuntos de datos clásicos y relativamente pequeños como \textit{Fashion MNIST} \cite{zalandoresearchFashionMNIST2022}, un conjunto con 70,000 imágenes distribuidas en 10 clases de objetos. En este dominio, el modelo demostró ser capaz de almacenar representaciones latentes generadas por un autoencoder convolucional y de recuperar dichas representaciones incluso en presencia de ruido o información incompleta. Estos resultados validaron la eficacia del modelo en tareas de reconocimiento cerrado, donde todas las clases de prueba (no así las instancias) habían sido registradas en memoria.
 
@@ -54,7 +54,7 @@ De esta manera, el artículo contribuye a ampliar la comprensión del comportami
 % -------------------- Antecedentes --------------------
 \section{Antecedentes}
 
-La \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés), propuesta por Pineda y Morales \cite{pinedaImageryEntropicAssociative2023}, surge como un modelo computacional inspirado en la cognición humana cuyo propósito es almacenar y recuperar patrones de manera probabilística y distribuida. A diferencia de los sistemas de memoria convencionales, la EAM opera sobre un único registro asociativo (\textit{Associative Memory Register}) que concentra las asociaciones de todos los patrones aprendidos en una representación matricial. Este enfoque permite un comportamiento flexible en el reconocimiento y la recuperación, y abre la puerta al estudio de fenómenos emergentes como la generalización y la generación de imágenes sintéticas.
+\noindent La \textit{Memoria Asociativa Entrópica} (EAM, por sus siglas en inglés), propuesta por Pineda y Morales \cite{pinedaImageryEntropicAssociative2023}, surge como un modelo computacional inspirado en la cognición humana cuyo propósito es almacenar y recuperar patrones de manera probabilística y distribuida. A diferencia de los sistemas de memoria convencionales, la EAM opera sobre un único registro asociativo (\textit{Associative Memory Register}) que concentra las asociaciones de todos los patrones aprendidos en una representación matricial. Este enfoque permite un comportamiento flexible en el reconocimiento y la recuperación, y abre la puerta al estudio de fenómenos emergentes como la generalización y la generación de imágenes sintéticas.
 
 El modelo se fundamenta en tres operaciones principales: 
 \begin{itemize}
@@ -62,7 +62,7 @@ El modelo se fundamenta en tres operaciones principales:
     \item \textbf{$\eta$-recognition}: determina si un estímulo de entrada es reconocido por la memoria, utilizando un criterio de tolerancia a errores y umbrales de confianza.
     \item \textbf{$\beta$-retrieval}: recupera un patrón completo a partir de una pista, que puede ser parcial o con ruido, utilizando distribuciones probabilísticas sobre las asociaciones almacenadas.
 \end{itemize}
-
+%
 En experimentos previos, la EAM fue evaluada con el conjunto de datos \textit{Fashion MNIST} \cite{zalandoresearchFashionMNIST2022}, compuesto por 70,000 imágenes distribuidas en 10 clases. En este escenario, la memoria fue alimentada con representaciones latentes producidas por un autoencoder convolucional, y demostró capacidad tanto para reconocer como para reconstruir patrones aún en condiciones de ruido o información incompleta. Asimismo, se exploraron fenómenos emergentes como la generación de secuencias de recuerdos (\textit{association chains}), mostrando la capacidad del sistema para transitar entre representaciones almacenadas. Posteriormente, se realizó un primer estudio utilizando el conjunto de datos \emph{Quick, Draw!} de Google, con pequeñas variaciones en el número de clases (entre 10 y 13), con resultados aceptables \cite{gonzalez2024clasificador}.
 
 A pesar de estos resultados prometedores, el marco experimental original presentaba limitaciones relevantes: 
@@ -77,33 +77,33 @@ Estas limitaciones motivan el presente trabajo, cuyo objetivo es validar la EAM 
 % -------------------- Metodología --------------------
 \section{Metodología}
 
-Con el objetivo de extender la validación del modelo de Memoria Asociativa Entrópica (EAM) y analizar su comportamiento en escenarios más complejos, se diseñó una metodología experimental dividida en tres fases principales. Estas fases permitieron migrar a un nuevo dominio de datos, evaluar el mecanismo de rechazo explícito y dotar al sistema de mayor flexibilidad para futuros experimentos.
+\noindent Con el objetivo de extender la validación del modelo de Memoria Asociativa Entrópica (EAM) y analizar su comportamiento en escenarios más complejos, se diseñó una metodología experimental dividida en tres fases principales. Estas fases permitieron migrar a un nuevo dominio de datos, evaluar el mecanismo de rechazo explícito y dotar al sistema de mayor flexibilidad para futuros experimentos.
 
-\subsection{Migración del Conjunto de Datos y Validación a Gran Escala}
-El primer paso consistió en reemplazar el conjunto de datos \textit{Fashion MNIST} por \textit{QuickDraw!} \cite{googlecreativelabQuickDrawData2025}, con más de 300 clases y cientos de miles de ejemplos por categoría. Este proceso requirió:
+\subsection{Migración del conjunto de datos y validación a gran escala}
+\noindent El primer paso consistió en reemplazar el conjunto de datos \textit{Fashion MNIST} por \textit{Quick. Draw!} \cite{googlecreativelabQuickDrawData2025}, con más de 300 clases y cientos de miles de ejemplos por categoría. Este proceso requirió:
 \begin{itemize}
-    \item \textbf{Adaptación del módulo de datos:} Se modificó el script \texttt{dataset.py} para cargar, procesar y balancear dinámicamente clases de QuickDraw. La lógica se ajustó para manejar un número variable de categorías y garantizar un número equitativo de muestras por clase.
-    \item \textbf{Reentrenamiento de las redes neuronales:} Se entrenó desde cero el sistema perceptivo definido en \texttt{neural\_net.py} (autoencoder y clasificador) utilizando QuickDraw como nueva fuente de datos. Este paso generó representaciones latentes (\textit{features}) adecuadas para la memoria.
-    \item \textbf{Validación del pipeline:} Se ejecutó el flujo completo (generación de características, almacenamiento en memoria y evaluación de reconocimiento) para verificar la compatibilidad del modelo con el nuevo dominio.
+    \item \textbf{Adaptación del módulo de datos:} Se modificó el script \texttt{dataset.py} para cargar, procesar y balancear dinámicamente clases de \emph{Quick, Draw!}. La lógica se ajustó para manejar un número variable de categorías y garantizar un número equitativo de muestras por clase.
+    \item \textbf{Reentrenamiento de las redes neuronales:} Se ajustó el sistema perceptivo, consistente en un autocodificador y un clasificador (definido en \texttt{neural\_net.py}), con base en el trabajo realizado para \cite{moralesMissingCueProblem2025} y se entrenó desde cero el sistema perceptivo  utilizando \emph{Quick, Draw!} como nueva fuente de datos. Este paso generó representaciones latentes (\textit{features}) adecuadas para la memoria.
+    \item \textbf{Validación del \emph{pipeline}:} Se ejecutó el flujo completo (entrenamiento del autoencodificador-clasificador, generación de características, almacenamiento en memoria y evaluación de reconocimiento) para verificar la compatibilidad del modelo con el nuevo dominio.
 \end{itemize}
 
-\subsection{Diseño e Implementación del Experimento de Rechazo}
-Para analizar la capacidad del sistema de rechazar patrones de clases no vistas, se implementó un segundo experimento con la siguiente lógica:
+\subsection{Diseño e implementación del experimento de rechazo}
+\noindent Para analizar la capacidad del sistema de rechazar patrones de clases no vistas, se implementó un segundo experimento con la siguiente lógica:
 \begin{itemize}
-    \item \textbf{Extensión de la interfaz de comandos:} Se añadió un nuevo argumento en el script principal \texttt{eam.py} (\texttt{-e 2}) para invocar este modo experimental.
-    \item \textbf{Registro parcial en memoria:} Durante la fase de entrenamiento, aunque el clasificador fue entrenado con todas las clases seleccionadas, la EAM registró únicamente la mitad de ellas.
+    \item \textbf{Extensión de la interfaz de comandos:} Se añadió un nuevo argumento en el programa principal \texttt{eam.py} (\texttt{-e 2}) para invocar este modo experimental.
+    \item \textbf{Registro parcial en memoria:} Aunque el clasificador fue entrenado con todas las clases seleccionadas, en la EAM se registró únicamente la mitad de ellas.
     \item \textbf{Evaluación con conjunto completo:} En la fase de prueba, el sistema se expuso a todas las clases, incluyendo las no registradas, lo que permitió evaluar explícitamente su respuesta de rechazo.
-    \item \textbf{Métrica de no respuesta:} Se empleó el índice \texttt{no\_response} como medida cuantitativa para evaluar la capacidad del sistema de no asociar patrones pertenecientes a clases no vistas.
+    \item \textbf{Métrica de aceptación y rechazo:} Se empleó el índice \texttt{no\_response} como medida cuantitativa para evaluar la capacidad del sistema de no asociar patrones pertenecientes a clases no vistas.
 \end{itemize}
 
-\subsection{Refactorización para la Flexibilidad Experimental}
-Con el fin de transformar el sistema en una plataforma experimental más versátil, se llevaron a cabo modificaciones adicionales:
+\subsection{Refactorización para la flexibilidad experimental}
+\noindent Con el fin de transformar el sistema en una plataforma experimental más versátil, se llevaron a cabo modificaciones adicionales:
 \begin{itemize}
-    \item \textbf{Parametrización del número de clases:} El script \texttt{eam.py} fue modificado para aceptar el número de clases como argumento de ejecución (\texttt{<classes>}), en lugar de estar fijado en el código.
-    \item \textbf{Propagación de parámetros:} Este valor fue transmitido al módulo de datos, lo que permitió preparar dinámicamente solo el subconjunto de clases requerido.
+    \item \textbf{Parametrización del número de clases:} El programa \texttt{eam.py} fue modificado para aceptar el número de clases como argumento de ejecución (\texttt{<classes>}), en lugar de estar fijado en el código.
+    \item \textbf{Propagación de parámetros:} Este valor fue transmitido al módulo de datos, lo que permitió preparar dinámicamente sólo el subconjunto de clases requerido.
     \item \textbf{Carga dinámica:} El sistema quedó habilitado para realizar experimentos con diferentes cantidades de clases (2, 4, 8, 16, 24 o 32), adaptándose a escenarios controlados de diversa complejidad.
 \end{itemize}
-
+%
 En conjunto, estas tres fases metodológicas permitieron escalar el modelo hacia un dominio sustancialmente mayor, analizar su capacidad de rechazo ante estímulos inéditos y habilitar una infraestructura más flexible para futuras pruebas experimentales.
 
 
@@ -537,7 +537,7 @@ En conjunto, estos hallazgos demuestran que la EAM no solo puede adaptarse a dom
 Este trabajo amplió el marco experimental de la Memoria Asociativa Entrópica (EAM) para evaluar su desempeño en escenarios de mayor complejidad y analizar su capacidad de rechazo ante clases no registradas. Las principales contribuciones pueden resumirse de la siguiente manera:
 
 \begin{itemize}
-    \item \textbf{Validación a gran escala:} Se migró de un dominio reducido de diez clases en Fashion MNIST a un dominio más amplio y diverso utilizando QuickDraw!, con resultados que confirman la capacidad del modelo para escalar en contextos con cientos de clases y mayor variabilidad en los patrones.
+    \item \textbf{Validación a gran escala:} Se migró de un dominio reducido de diez clases en Fashion MNIST a un dominio más amplio y diverso utilizando \emph{Quick, Draw!}, con resultados que confirman la capacidad del modelo para escalar en contextos con cientos de clases y mayor variabilidad en los patrones.
     
     \item \textbf{Capacidad de rechazo:} Se diseñó e implementó un nuevo experimento que mostró empíricamente cómo la EAM es capaz de emitir una respuesta de \texttt{no\_response} frente a estímulos correspondientes a clases no vistas, validando su utilidad en problemas de reconocimiento abierto.
     
