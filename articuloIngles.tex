@@ -45,7 +45,7 @@
 	\textit{Campus Hermosillo}\\
 	\textit{Universidad de Sonora}\\
 	Hermosillo, Sonora, Mexico\\
-	fernandoborquez215@gmail.com
+	\href{mailto:fernandoborquez215@gmail.com}{fernandoborquez215@gmail.com}
 }%
 \and
 \IEEEauthorblockN{%
@@ -65,16 +65,15 @@
 
 % -------------------- Abstract --------------------
 \begin{abstract}
-The Entropic Associative Memory (EAM), proposed by Pineda and Morales (2023), is a computational model inspired by human cognition that combines probabilistic recognition properties with an efficient architecture for pattern storage and retrieval. In previous studies, EAM was evaluated using the Fashion MNIST dataset, yielding positive results in image classification and reconstruction, although limited to a reduced domain of only ten classes.
+The Entropic Associative Memory (EAM) is a computational model inspired by human cognition, combining probabilistic recognition with an efficient architecture for pattern storage and retrieval. Previous evaluations on datasets like (E)MNIST and CIFAR-10 showed positive results for EAM in classification and reconstruction. However, these studies were limited to small-scale domains, typically ten classes or a few thousand instances per class.
 
-This work presents two main contributions aimed at overcoming these limitations. First, we assess the scalability of the model by migrating to a substantially larger dataset: Google’s \emph{Quick, Draw!}, which contains more than 300 classes and hundreds of thousands of examples per category. Second, we design a rejection experiment to verify whether the memory is capable of identifying and not recognizing those classes that were not explicitly stored. To this end, the memory is trained with only half of the classes and evaluated on the complete set.
+This work addresses these limitations with two main contributions. First, we assess the model's scalability by evaluating it on a substantially larger dataset: Google's \textit{Quick, Draw!}, which features over 300 classes and more than 100,000 instances per class. Second, we design a rejection experiment to test EAM's ability to reject instances from classes not explicitly stored in memory. To do so, the memory is filled with only half of the available classes and then evaluated on the complete dataset.
 
-The results confirm that EAM can adapt to more complex scenarios and suggest that it may provide an effective rejection mechanism against novel stimuli, offering evidence of its potential as an explainable and robust model within the field of artificial intelligence.
-\end{abstract}
+The results confirm EAM's adaptability to more complex, large-scale scenarios. They also demonstrate an effective rejection mechanism for novel stimuli, highlighting its potential as a robust and explainable model within the field of artificial intelligence.\end{abstract}
 
 % -------------------- Keywords --------------------
 \begin{IEEEkeywords}
-Entropic Associative Memory, Quick Draw, Fashion MNIST, scalability, open-set recognition
+Entropic Associative Memory, Quick Draw, scalability, open-set recognition, rejection.
 \end{IEEEkeywords}
 
 
