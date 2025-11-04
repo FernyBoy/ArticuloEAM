@@ -1,24 +1,67 @@
 \documentclass[conference]{IEEEtran} % puedes cambiar a article si prefieres
 
-%% IEEE Trans parece requerir el uso de PDFLaTeX
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+
+%% IEEE Trans parece requerir fontenc
 \usepackage[T1]{fontenc}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{hyperref}
 \usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
 \usepackage{float}
 \usepackage{booktabs}
+\usepackage{orcidlink}
 
-\title{Large-Scale Validation and Analysis of the Rejection Capacity in Entropic Associative Memory}
+\newcommand{\affmark}[1]{\textsuperscript{#1}}
+\newcommand{\affaddr}[1]{\textit{#1}}
 
-%\author{
-%    Angel Fernando Bórquez Guerrero \\
-%    Rafael Morales Gamboa \\
-%}
+\usepackage{fancyhdr}
+\fancypagestyle{firststyle}
+{
+	\fancyhf{}
+	\fancyhead[C]{\fontsize{10}{10} \selectfont \textit{2025 Mexican International Conference on Computer Science (ENC) \& IEEE ICEV, Orizaba, Veracruz, México} }
+	\fancyfoot[L]{\fontsize{8}{10} \selectfont \textbf{979-8-3315-9026-0/25/\$31.00 \textcopyright 2025 IEEE}}
+	\fancyfoot[R]{\fontsize{8}{10} \selectfont \textbf{Online ISSN: 2332-5712}}
+}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
 
 \begin{document}
+	
+\title{Large-Scale Validation and Analysis of the Rejection Capacity in Entropic Associative Memory}
+
+\thanks{The work was conducted during the first author’s summer stay at the University of Guadalajara, supported by a scholarship from the Programa Delfín.}
+
+\author{%
+\IEEEauthorblockN{%
+	Angel Fernando Bórquez-Guerrero,
+}%
+\IEEEauthorblockA{%
+	\textit{Campus Hermosillo}\\
+	\textit{Universidad de Sonora}\\
+	Hermosillo, Sonora, Mexico\\
+	fernandoborquez215@gmail.com
+}%
+\and
+\IEEEauthorblockN{%
+	Rafael Morales-Gamboa,
+}%
+\IEEEauthorblockA{%
+	\textit{Centro Universitario de Guadalajara}\\
+	\textit{Universidad de Guadalajara}\\
+	Guadalajara, Jalisco, Mexico\\
+	\orcidlinkc{0000-0003-4347-6028}
+}%
+}
 
 \maketitle
+\thispagestyle{firststyle}
+\renewcommand{\headrulewidth}{0in}
 
 % -------------------- Abstract --------------------
 \begin{abstract}
@@ -28,9 +71,6 @@ This work presents two main contributions aimed at overcoming these limitations.
 
 The results confirm that EAM can adapt to more complex scenarios and suggest that it may provide an effective rejection mechanism against novel stimuli, offering evidence of its potential as an explainable and robust model within the field of artificial intelligence.
 \end{abstract}
-
-
-
 
 % -------------------- Keywords --------------------
 \begin{IEEEkeywords}
