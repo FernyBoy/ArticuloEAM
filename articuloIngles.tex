@@ -14,6 +14,11 @@
 \usepackage{float}
 \usepackage{booktabs}
 \usepackage{orcidlink}
+\ifCLASSOPTIONcompsoc
+  \usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\else
+  \usepackage[caption=false,font=footnotesize]{subfig}
+\fi
 
 \newcommand{\affmark}[1]{\textsuperscript{#1}}
 \newcommand{\affaddr}[1]{\textit{#1}}
@@ -125,52 +130,52 @@ These limitations motivate the present work, whose goals is to validate EAM in a
 % -------------------- Metodología --------------------
 \section{Methodology}
 
-\noindent To extend the validation of the Entropic Associative Memory (EAM) model and analyze its behavior in more complex scenarios, an experimental methodology was designed and divided into three main phases. These phases enabled migration to a new data domain, evaluation of the explicit rejection mechanism, and provided the system with greater flexibility for future experiments.
+\noindent To extend the validation of the EAM model, and analyze its behavior in more complex scenarios, an experimental methodology was designed and divided into three main phases. These phases enabled migration to a new data domain, evaluation of the explicit rejection mechanism, and provided the system with greater flexibility for future experiments.
 
 \subsection{Dataset Migration and Large-Scale Validation}
-\noindent The first step consisted of replacing the \textit{Fashion MNIST} dataset with \textit{Quick, Draw!} \cite{googlecreativelabQuickDrawData2025}, which contains more than 300 classes and hundreds of thousands of examples per category. This process required:
+\noindent The first step consisted in introducing the \textit{Quick, Draw!} dataset \cite{googlecreativelabQuickDrawData2025}. This process required:
 \begin{itemize}
-    \item \textbf{Adaptation of the data module:} The \texttt{dataset.py} script was modified to load, process, and dynamically balance \emph{Quick, Draw!} classes. The logic was adjusted to handle a variable number of categories and to guarantee an equal number of samples per class.
-    \item \textbf{Retraining of neural networks:} The perceptual system, consisting of an autoencoder and a classifier (defined in \texttt{neural\_net.py}), was adjusted based on the work in \cite{moralesMissingCueProblem2025} and retrained from scratch using \emph{Quick, Draw!} as the new data source. This step produced suitable latent representations (\textit{features}) for the memory.
+    \item \textbf{Adaptation of the data module:} The data module was modified to load, process, and dynamically balance an arbitrary subset of \emph{Quick, Draw!} classes. The logic was adjusted to handle a variable number of categories and to guarantee an equal number of samples per class.
+    \item \textbf{Retraining of neural networks:} The perceptual system, consisting of an autoencoder and a classifier, was adjusted based on the work in \cite{moralesMissingCueProblem2025} and retrained from scratch using \emph{Quick, Draw!} as the new data source. This step produced suitable latent representations (\textit{features}) for the memory.
     \item \textbf{Pipeline validation:} The full workflow (autoencoder-classifier training, feature generation, memory storage, and recognition evaluation) was executed to verify the model's compatibility with the new domain.
 \end{itemize}
 
 \subsection{Design and Implementation of the Rejection Experiment}
 \noindent To analyze the system's ability to reject patterns from unseen classes, a second experiment was implemented with the following logic:
 \begin{itemize}
-    \item \textbf{Extension of the command interface:} A new argument was added to the main program \texttt{eam.py} (\texttt{-e 2}) to invoke this experimental mode.
-    \item \textbf{Partial memory registration:} Although the classifier was trained with all selected classes, only half of them were stored in EAM.
+    \item \textbf{Partial memory registration:} Although the perceptual system was trained with all selected classes, only half of them were stored in EAM.
     \item \textbf{Evaluation with the complete set:} During the test phase, the system was exposed to all classes, including those not stored, enabling explicit evaluation of its rejection response.
-    \item \textbf{Acceptance and rejection metric:} The \texttt{rejection\_response} index was employed as a quantitative measure to evaluate the system's ability to avoid associating patterns from unseen classes.
+    \item \textbf{Acceptance and rejection metric:} The \emph{rejection-response index} was employed as a quantitative measure to evaluate the system's ability to avoid associating patterns from unseen classes.
 \end{itemize}
 
 \subsection{Refactoring for Experimental Flexibility}
 \noindent To transform the system into a more versatile experimental platform, additional modifications were carried out:
 \begin{itemize}
-    \item \textbf{Parameterization of the number of classes:} The \texttt{eam.py} program was modified to accept the number of classes as a runtime argument (\texttt{<classes>}), instead of being hardcoded.
+    \item \textbf{Parametrization of the number of classes:} The main program was modified to accept the number of classes as a runtime argument, instead of being hard-coded.
     \item \textbf{Parameter propagation:} This value was passed to the data module, allowing dynamic preparation of only the required subset of classes.
-    \item \textbf{Dynamic loading:} The system was enabled to run experiments with different numbers of classes (2, 4, 8, 16, 24, or 32), adapting to controlled scenarios of varying complexity.
+    \item \textbf{Dynamic loading:} The system was enabled to run experiments with different numbers of classes, adapting to controlled scenarios of varying complexity.
 \end{itemize}
 %
-Taken together, these three methodological phases allowed the model to scale to a substantially larger domain, analyze its rejection capability when facing novel stimuli, and provide a more flexible infrastructure for future experimental trials.
+Taken together, these three methodological phases allowed the model scaling to a substantially larger domain, analyze its rejection capability when facing novel stimuli, and provide a more flexible infrastructure for future experimental trials.
 
 
 
 % -------------------- Resultados --------------------
 \section{Results}
 
-\subsection{Quantitative Results by Number of Classes}
 % ***** "The limitation of considering only 64 of the 300 classes in the dataset must be noted when discussing the findings" *****
-\indent This section presents the performance of the autoencoder-classifier and the entropic associative memory as the number of classes varies. Out of the 345 classes in the \emph{Quick, Draw!} dataset, a total of 64 were randomly selected for the experiments. From this set, experiments were run using the first 2, 4, 8, 16, 24, and 32 classes. For each configuration, the dataset was balanced to contain 12,000 samples per class, which were divided into three subsets: 10,000 for the autoencoder-classifier training corpus, 1,000 for the entropic associative memory's filling corpus, and 1,000 for the test corpus used by both. Due to time constraints and the memory limitations of the server, experiments with more classes were not performed. However, the selection of 64 classes was considered sufficient to observe a clear trend in the results, and the consistency of the results suggests that they are not far from what would be obtained with cross-validation.
+\indent This section presents the performance of the autoencoder-classifier and the entropic associative memory as the number of classes varies. Out of the 345 classes in the \emph{Quick, Draw!} dataset, a total of 64 were randomly selected for the experiments, and balanced to 113,613 instances each. The perceptual system was trained using 70\% of this dataset. Experiments were run using the first 2, 4, 8, 16, 24, and 32 classes only, due to memory constraints. For each configuration, 20\% of the corresponding dataset was used as the entropic associative memory's filling corpus, and 10\% as the testing corpus for both the perceptual system and the memory. Due to time constraints, and memory limitations of the server, experiments with more classes were not performed. However, the selection of 64 classes is considered sufficient to observe a clear trend in the results, as their consistency suggests that they are not far from what would be obtained with cross-validation.
+
 % ********************************************************************************************************************************
 
-As in \cite{pinedaImageryEntropicAssociative2023} and \cite{moralesMissingCueProblem2025}, the neural networks implementing the autoencoder and the classifier were trained jointly. Table~\ref{tab:autoencoder-classifier-performance} presents their performance on the test set for the different numbers of classes taken from the dataset. As can be observed, the classifier's performance tends to decrease as the number of classes increases, but it remained above 91\% accuracy. The autoencoder's performance is slightly more stable, with a difference of less than 3\% across all cases.
+As in \cite{pinedaImageryEntropicAssociative2023} and \cite{moralesMissingCueProblem2025}, the neural networks implementing the perceptual system, and autoencoder and a classifier, were trained jointly. Table~\ref{tab:autoencoder-classifier-performance} presents their performance on the test set for the different numbers of classes taken from the dataset. As can be observed, the classifier's performance tends to decrease as the number of classes increases, but it remained above 91\% accuracy. The autoencoder's performance is slightly more stable, with a difference of less than 3\% across all cases.
 
 \begin{table}[htbp]
 	\centering
 	\caption{Performance of the autoencoder (root mean square error) and the classifier (accuracy) for different numbers of classes.}
 	\begin{tabular}{@{}ccc@{}}\toprule
-		Number of Classes & Accuracy &  Error \\
+			& Classifier & Autoencoder \\
+		Number of Classes & Accuracy &  RMSE \\
 		\midrule
 		2 & 0.976 & 0.218 \\
 		4 & 0.950 & 0.215 \\
@@ -189,19 +194,19 @@ To facilitate a clearer comparison of the results, Table~\ref{tab:summary-perfor
 \begin{table}[htbp]
 	\centering
 	\caption{Summary of performance across experiments.}
+	\label{tab:summary-performance}
 	\begin{tabular}{@{}cccc@{}}\toprule
-		Number of & Classifier & EAM Accuracy & EAM Accuracy \\
+		Number of & Classifier & EAM Peak Accuracy & EAM Peak Accuracy \\
 		Classes & Accuracy & (Recognition Exp.) & (Rejection Exp.) \\
 		\midrule
-		2 & 0.976 & $\approx$0.97 & $\approx$0.95 \\
-		4 & 0.950 & $\approx$0.95 & $\approx$0.85 \\
-		8 & 0.921 & $\approx$0.92 & $\approx$0.75 \\
-		16 & 0.914 & $\approx$0.91 & $\approx$0.65 \\
-		24	& 0.917 & $\approx$0.91 & $\approx$0.60 \\
-		32 & 0.917 & $\approx$0.91 & $\approx$0.55 \\
+		2 & 0.976 & 0.975 & 0.943 \\
+		4 & 0.950 & 0.951 & 0.925 \\
+		8 & 0.921 & 0.920 & 0.814 \\
+		16 & 0.914 & 0.940 & 0.686 \\
+		24	& 0.917 & 0.915 & 0.584 \\
+		32 & 0.917 & 0.917 & 0.601 \\
 		\bottomrule
 	\end{tabular}
-	\label{tab:summary-performance}
 \end{table}
 % ******************************************************************
 
@@ -209,170 +214,43 @@ To facilitate a clearer comparison of the results, Table~\ref{tab:summary-perfor
 
 
 \subsection{Recognition Experiment Results (All Classes Stored in Memory)}
-\noindent In this experiment, the memory stored all the available classes, which were also used to train and evaluate the neural networks. Figures~\ref{fig:precision_2} to \ref{fig:precision_32} show the corresponding performance of the entropic associative memory using precision and accuracy metrics. In all cases, the same number of memory columns (256) was kept, while the number of rows was varied in powers of two, from 2 up to 1024. Overall, it can be observed that the performances with 4 or more rows were very similar to each other and comparable to those obtained by the classifier.
 
-
-% -- 2 Classes
 % ***** "In Figures 1-6, it is not clear what the entropy bar at the bottom of the figures is for. More details or a brief description will be helpful for the reader" *****
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/graph_prse_MEAN-english.pdf}
-    \caption{Precision and accuracy of the associative memory with 2 classes. The color bar at the bottom represents the entropy of the memory, where blue indicates low entropy (high certainty) and red indicates high entropy (high uncertainty).}
-    \label{fig:precision_2}
-\end{figure}
+\noindent In this experiment, the memory stored all the available classes. The graphs included in Figure~\ref{fig:results_exp1} show the performance of the entropic associative memory using precision and accuracy metrics. In all cases, the same number of memory columns (256) was kept, while the number of rows was varied in powers of two, from 2 up to 1024. Overall, it can be observed that the number of rows needed for the memory to perform well increases rather slowly with the number of classes stored in it. The performances with 4 or more rows were very similar to each other and comparable to those obtained by the classifier. The color bar at the bottom of each graph represents the entropy of the memory, where lower entropy (blue) indicates high certainty, and higher entropy (red) indicates high uncertainty.
 
-% -- 4 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/graph_prse_MEAN-english.pdf}
-    \caption{Precision and accuracy of the associative memory with 4 classes. The color bar at the bottom represents the entropy of the memory, where blue indicates low entropy (high certainty) and red indicates high entropy (high uncertainty).}
-    \label{fig:precision_4}
-\end{figure}
-
-% -- 8 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/graph_prse_MEAN-english.pdf}
-    \caption{Precision and accuracy of the associative memory with 8 classes. The color bar at the bottom represents the entropy of the memory, where blue indicates low entropy (high certainty) and red indicates high entropy (high uncertainty).}
-    \label{fig:precision_8}
-\end{figure}
-
-% -- 16 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/graph_prse_MEAN-english.pdf}
-    \caption{Precision and accuracy of the associative memory with 16 classes. The color bar at the bottom represents the entropy of the memory, where blue indicates low entropy (high certainty) and red indicates high entropy (high uncertainty).}
-    \label{fig:precision_16}
-\end{figure}
-
-% -- 24 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_24/graph_prse_MEAN-english.pdf}
-    \caption{Precision and accuracy of the associative memory with 24 classes. The color bar at the bottom represents the entropy of the memory, where blue indicates low entropy (high certainty) and red indicates high entropy (high uncertainty).}
-    \label{fig:precision_24}
-\end{figure}
-
-% -- 32 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_32/graph_prse_MEAN-english.pdf}
-    \caption{Precision and accuracy of the associative memory with 32 classes. The color bar at the bottom represents the entropy of the memory, where blue indicates low entropy (high certainty) and red indicates high entropy (high uncertainty).}
-    \label{fig:precision_32}
-\end{figure}
-% ***********************************
-
-
-% --------------------
-\noindent To observe the performance of the memory as it is filled with memories, for each number of classes, a set of rows with good performance was selected, and the behavior of the memory's precision and accuracy was observed as it was filled in percentages that also varied in powers of two. Figures \ref{fig:recall_exp1_2_004} to \ref{fig:recall_exp1_32_016} present the obtained results. In general, it can be stated that the memory's performance remains stable when filled with at least 8\% of the filling corpus.
-
-
-
-% -- 2 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_001-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Results of the recognition experiment with 2 classes and a memory of 4 rows.}
-    \label{fig:recall_exp1_2_004}
-\end{figure}
-
-% -- 4 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Results of the recognition experiment with 4 classes and a memory of 32 rows.}
-    \label{fig:recall_exp1_4_032}
-\end{figure}
-
-% -- 8 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Results of the recognition experiment with 8 classes and a memory of 16 rows.}
-    \label{fig:recall_exp1_8_016}
-\end{figure}
-
-% -- 16 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Results of the recognition experiment with 16 classes and a memory of 16 rows.}
-    \label{fig:recall_exp1_16_016}
-\end{figure}
-
-% -- 24 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_24/recall-exp_001-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Results of the recognition experiment with 24 classes and a memory of 32 rows.}
-    \label{fig:recall_exp1_24_032}
-\end{figure}
-
-% -- 32 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_32/recall-exp_001-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Results of the recognition experiment with 32 classes and a memory of 16 rows.}
-    \label{fig:recall_exp1_32_016}
-\end{figure}
-
-
-
-% --------------------
-
-
-
+\begin{figure*}[htbp]
+	\centering
+	\subfloat[2 classes\label{fig:exp1_2}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_02/graph_prse_MEAN-english}}
+	\hfil
+	\subfloat[4 classes\label{fig:exp1_4}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_04/graph_prse_MEAN-english}}\\
+	\subfloat[8 classes\label{fig:exp1_8}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_08/graph_prse_MEAN-english}}
+	\hfil
+	\subfloat[16 classes\label{fig:exp1_16}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_16/graph_prse_MEAN-english}}\\
+	\subfloat[24 classes\label{fig:exp1_24}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_24/graph_prse_MEAN-english}}
+	\hfil
+	\subfloat[32 classes\label{fig:exp1_32}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_32/graph_prse_MEAN-english}}
+	\caption{Precision, accuracy, and entropy of the associative memory across the recognition experiment.}
+	\label{fig:results_exp1}
+\end{figure*}
 
 \subsection{Results of the Experiment on Rejection of Unregistered Classes}
-\noindent In this experiment, only the first half of the classes were stored in the memory, but evaluation was performed against the complete set. For each number of classes, the same number of memory rows was selected as in the previous experiment (Figures \ref{fig:recall_exp1_2_004} to \ref{fig:recall_exp1_32_016}), and the performance of the memory was observed as it was being filled. Figures \ref{fig:recall_exp2_2_004} to \ref{fig:recall_exp2_32_016} present the corresponding precision and accuracy graphs. It can be observed that the memory performs very well with two classes and little information stored, and its performance decreases as both the number of classes and the number of elements from the filling corpus stored in memory increase.
+\noindent In this experiment, only the first half of the classes were stored in the memory, but evaluation was performed against the complete set, using the same procedures and the same metrics as in the recognition experiment. The graphs in Figure~\ref{fig:results_exp2} present the results. It can be observed that the memory performs very well with two and four classes, achieving results close to the corresponding ones in the recognition experiment. However, its performance decreases as the number of classes from the filling corpus (and the number of instances of those classes) stored in memory increases.
 
-% -- 2 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_02/recall-exp_002-sze_004-graph_prse_MEAN-english.pdf}
-    \caption{Results of the rejection experiment with 2 classes and a memory of 4 rows.}
-    \label{fig:recall_exp2_2_004}
-\end{figure}
+\begin{figure*}[htbp]
+	\centering
+	\subfloat[2 classes\label{fig:exp2_2}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_02/graph_prse_MEAN-exp_002-english}}
+	\hfil
+	\subfloat[4 classes\label{fig:exp2_4}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_04/graph_prse_MEAN-exp_002-english}}\\
+	\subfloat[8 classes\label{fig:exp2_8}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_08/graph_prse_MEAN-exp_002-english}}
+	\hfil
+	\subfloat[16 classes\label{fig:exp2_16}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_16/graph_prse_MEAN-exp_002-english}}\\
+	\subfloat[24 classes\label{fig:exp2_24}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_24/graph_prse_MEAN-exp_002-english}}
+	\hfil
+	\subfloat[32 classes\label{fig:exp2_32}]{\includegraphics[width=0.45\textwidth]{Graficas/runs_32/graph_prse_MEAN-exp_002-english}}
+	\caption{Precision, accuracy, and entropy of the associative memory across the rejection experiment.}
+	\label{fig:results_exp2}
+\end{figure*}
 
-% -- 4 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_04/recall-exp_002-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Results of the rejection experiment with 4 classes and a memory of 32 rows.}
-    \label{fig:recall_exp2_4_032}
-\end{figure}
-
-% -- 8 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_08/recall-exp_002-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Results of the rejection experiment with 8 classes and a memory of 16 rows.}
-    \label{fig:recall_exp2_8_016}
-\end{figure}
-
-% -- 16 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_16/recall-exp_002-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Results of the rejection experiment with 16 classes and a memory of 16 rows.}
-    \label{fig:recall_exp2_16_016}
-\end{figure}
-
-% -- 24 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_24/recall-exp_002-sze_032-graph_prse_MEAN-english.pdf}
-    \caption{Results of the rejection experiment with 24 classes and a memory of 32 rows.}
-    \label{fig:recall_exp2_24_032}
-\end{figure}
-
-% -- 32 Classes
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Graficas/runs_32/recall-exp_002-sze_016-graph_prse_MEAN-english.pdf}
-    \caption{Results of the rejection experiment with 32 classes and a memory of 16 rows.}
-    \label{fig:recall_exp2_32_016}
-\end{figure}
 
 
 
