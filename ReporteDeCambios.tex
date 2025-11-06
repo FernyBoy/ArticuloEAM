@@ -1,0 +1,120 @@
+
+\documentclass[conference]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage{lipsum}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+
+\title{Revision Report\\
+\large Paper ID: 87\\
+\large Title: ``Large-Scale Validation and Analysis of the Rejection Capacity in Entropic Associative Memory''}
+
+\author{
+    Angel Fernando Bórquez Guerrero \\
+    Rafael Morales Gamboa
+}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+
+We thank the reviewers for their valuable feedback and constructive comments on our paper titled \textit{``Large-Scale Validation and Analysis of the Rejection Capacity in Entropic Associative Memory.''}  
+All suggestions were carefully considered, and the revised version incorporates the requested changes.  
+Below we detail each comment and the corresponding modifications implemented in the manuscript.
+
+% =============================================================
+\section*{Reviewer \#2}
+
+\subsection*{Comment}
+\textit{The article mentions modifying specific Python files, but it is unclear where these files are obtained from or what exact modifications were made. Even if one were to obtain those files, how could the results claimed in this article be reproduced?}
+
+\subsection*{Response}
+A new section titled \textbf{``Reproducibility''} was added at the end of the paper.  
+It includes a link to the public GitHub repository containing the source code, datasets, and experimental scripts used in this work:  
+\url{https://github.com/FernyBoy/quick.git}.  
+
+The section also specifies the main files and their functions:
+\begin{itemize}
+    \item \texttt{dataset.py} --- loads, processes, and balances the \emph{Quick, Draw!} data.
+    \item \texttt{neural\_net.py} --- defines and trains the autoencoder and classifier.
+    \item \texttt{eam.py} --- contains the experimental logic and implements the rejection experiment.
+\end{itemize}
+
+This addition ensures full reproducibility of the reported results.
+
+% =============================================================
+\section*{Reviewer \#4}
+
+\subsection*{General comment}
+The reviewer suggested a weak acceptance and provided several valuable recommendations, all of which have been addressed in the revised version.
+
+\subsection*{1. Paper length exceeds conference guidelines}
+The manuscript was shortened by removing redundant explanations and slightly condensing figure captions and the abstract.  
+All content remains clear and complete while fitting within the conference page limit.
+
+\subsection*{2. Undefined references in the introduction}
+The introduction now explicitly includes the \textbf{third limitation} that was missing in the original version:
+\textit{“Finally, the experimental design was tightly coupled to the fixed number of classes configured in the neural networks, limiting flexibility.”}
+
+\subsection*{3. Entropy bar clarification (Figures 1–6)}
+All captions for Figures 1–6 were revised to include an explanation of the entropy bar:
+\textit{“The color bar at the bottom represents the entropy of the memory, where blue indicates low entropy (high certainty) and red indicates high entropy (high uncertainty).”}
+
+\subsection*{4. More details on dataset composition}
+Section IV.A now includes full details of the experimental dataset:
+\begin{itemize}
+    \item 64 classes randomly selected from 345 total.
+    \item 113,613 samples per class (balanced).
+\end{itemize}
+A note was also added explaining that hardware limitations prevented scaling beyond 64 classes, but the selected subset was sufficient to identify performance trends.
+
+\subsection*{5. Limitation of using only 64 classes}
+This limitation is explicitly acknowledged in both Section IV.A and Section VI (Discussion):
+\textit{“It is important to note that these conclusions are based on experiments with only 64 of the 345 available classes, and future work should aim to scale these tests to the entire dataset.”}
+
+\subsection*{6. Results presentation improvement}
+A new summary table (\textbf{Table II}) titled \textit{“Summary of performance across experiments”} was added.  
+This table compares classifier accuracy with EAM accuracy for both recognition and rejection experiments, simplifying cross-experiment analysis.
+
+\subsection*{7. Explainability of the EAM model}
+A new paragraph was introduced in the \textbf{Background} section describing the EAM’s explainable nature:  
+the associative memory register can be directly inspected, allowing users to visualize and trace feature associations.  
+This addition emphasizes EAM’s transparency and its contrast with conventional “black-box” models.
+
+% =============================================================
+\section*{Summary of All Implemented Changes}
+
+\begin{table}[H]
+\centering
+\caption{Overview of Modifications Implemented in the Revised Version}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Section} & \textbf{Type of Change} & \textbf{Description} \\
+\midrule
+Abstract & Reduction & Condensed text to fit page limit \\
+Introduction & Clarification & Added third limitation \\
+Background & Addition & Added paragraph on model explainability \\
+Results (IV.A) & Expansion & Detailed dataset balance and splits \\
+Results (IV.A) & Addition & Added Table II for performance summary \\
+Figures 1–6 & Caption Update & Explained entropy color bar \\
+Discussion & Clarification & Added 64-class limitation note \\
+Reproducibility & New Section & GitHub link + modified files list \\
+Overall & Structural & Condensed layout to meet page limits \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =============================================================
+\section*{Conclusion}
+All reviewer comments have been thoroughly addressed.  
+The revised manuscript improves clarity, transparency, and reproducibility while adhering to the conference guidelines.  
+We sincerely thank both reviewers for their insightful feedback, which has significantly strengthened the paper.
+
+\bibliographystyle{IEEEtran}
+\bibliography{articulo}
+
+\end{document}
