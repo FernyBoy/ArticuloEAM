@@ -43,25 +43,18 @@
 \thanks{The work was conducted during the first author's summer stay at the University of Guadalajara, supported by a scholarship from the Programa Delfín.}
 
 \author{%
-\IEEEauthorblockN{%
-	Angel Fernando Bórquez-Guerrero,
-}%
-\IEEEauthorblockA{%
-	\textit{Campus Hermosillo}\\
-	\textit{Universidad de Sonora}\\
-	Hermosillo, Sonora, Mexico\\
-	\href{mailto:fernandoborquez215@gmail.com}{fernandoborquez215@gmail.com}
-}%
-\and
-\IEEEauthorblockN{%
-	Rafael Morales-Gamboa,
-}%
-\IEEEauthorblockA{%
-	\textit{Centro Universitario de Guadalajara}\\
-	\textit{Universidad de Guadalajara}\\
-	Guadalajara, Jalisco, Mexico\\
-	\orcidlinkc{0000-0003-4347-6028}
-}%
+	\IEEEauthorblockN{%
+		Ángel Fernando Bórquez\affmark{a},
+		Rafael Morales\affmark{b},
+		Luis A. Pineda\affmark{c}
+	}%
+	\IEEEauthorblockA{%
+		\textit{\affmark{a} Universidad de Sonora}\\
+		\textit{\affmark{b} Universidad de Guadalajara}\\
+		\textit{\affmark{c} Universidad Nacional Autónoma de México}\\
+		Guadalajara, Jalisco, México\\
+		\orcidlinkc{0000-0003-4347-6028}
+	}%
 }
 
 \maketitle
@@ -70,7 +63,8 @@
 
 % -------------------- Abstract --------------------
 \begin{abstract}
-The Entropic Associative Memory (EAM) is a computational model inspired by human cognition, combining probabilistic recognition with an efficient architecture for pattern storage and retrieval. Previous evaluations were limited to small-scale domains, typically containing ten classes and a few thousand instances per class, yet they showed positive results for EAM in classification and reconstruction. This work addresses these limitations with two main contributions. First, we assess the model's scalability by evaluating it on a substantially larger dataset: Google's \textit{Quick, Draw!}, which features over 300 classes and more than 100,000 instances per class. Second, we design a rejection experiment to test EAM's ability to reject instances from classes not explicitly stored in memory. To do so, the memory is filled with only half of the available classes and then evaluated on the complete dataset. The results confirm EAM's adaptability to more complex, large-scale scenarios. They also demonstrate an effective rejection mechanism for novel stimuli, highlighting its potential as a robust and explainable model within the field of artificial intelligence.\end{abstract}
+The Entropic Associative Memory (EAM) is a cognitively inspired computational model that combines probabilistic recognition with an efficient pattern storage and retrieval architecture. Previous evaluations, limited to small domains of about ten classes and a few thousand instances per class, showed promising results in classification and reconstruction. This work extends those studies in two ways. First, we assess scalability using Google’s \textit{Quick, Draw!} dataset, which includes over 300 classes and 100,000 instances per class. Second, we test EAM’s rejection capability by storing only half of the classes and evaluating performance on the full dataset. Results confirm EAM’s adaptability to large-scale scenarios and its effective rejection of novel stimuli, underscoring its potential as a robust and explainable AI model.
+\end{abstract}
 
 % -------------------- Keywords --------------------
 \begin{IEEEkeywords}
@@ -82,78 +76,69 @@ Entropic Associative Memory, Quick Draw, scalability, open-set recognition, reje
 % -------------------- Introducción --------------------
 \section{Introduction}
 
-\noindent The development of memory models inspired by human cognition has become a rapidly growing research area within artificial intelligence (AI) \cite{russellArtificialIntelligenceModern2020}. These approaches aim to computationally reproduce the ability of biological systems to store, associate, and retrieve information from past experiences. In this context, the \textit{Entropic Associative Memory} (EAM), proposed by Pineda and Morales \cite{pinedaImageryEntropicAssociative2023}, represents a significant theoretical advancement by providing a declarative, distributed, and efficient architecture capable of probabilistic recognition and flexible pattern retrieval.
+\noindent Research on memory models inspired by human cognition has grown rapidly within artificial intelligence (AI) \cite{russellArtificialIntelligenceModern2020}. These approaches aim to computationally reproduce the capacity of biological systems to store, associate, and retrieve past experiences. In this context, the Entropic Associative Memory (EAM), proposed by Pineda and Morales \cite{pinedaImageryEntropicAssociative2023}, constitutes a theoretical advance by offering a declarative, distributed, and efficient architecture for probabilistic recognition and flexible pattern retrieval.
 
-Initial studies with EAM focused on classical and relatively small datasets, such as \textit{Fashion MNIST} \cite{zalandoresearchFashionMNIST2022}. In that domain, the model demonstrated its ability to store latent representations generated by a convolutional autoencoder and to retrieve these representations even in the presence of noise or incomplete information. These results validated the effectiveness of the model in closed-set recognition tasks, where all test classes (though not all instances) had been previously stored in memory.
+Early studies with EAM focused on small datasets such as Fashion MNIST \cite{zalandoresearchFashionMNIST2022}, where the model stored latent representations from a convolutional autoencoder and successfully retrieved them under noise or partial input. These results validated its effectiveness in closed-set recognition, where all test classes had been previously stored in memory. However, the original framework had three main limitations: (1) evaluations were restricted to small domains, hindering scalability analysis; (2) the model’s ability to reject non-stored classes—crucial in open-set recognition \cite{scheirerOpenSetRecognition2013}—was untested; and (3) the experimental setup was tightly coupled to fixed neural-network configurations.
 
-% ***** "There are undefined references in the introduction section. The text mentions three main limitations to the experimental framework from [1], but only two are stated" *****
-The original experimental framework presents three main limitations. First, the evaluation was carried out in small and limited domains, restricting the analysis of the model's scalability. Second, the memory's ability to explicitly reject instances from non-stored classes had not been tested, a critical aspect in \emph{open-set recognition} problems \cite{scheirerOpenSetRecognition2013}. Third, the experimental design was tightly coupled to the fixed number of classes configured in the neural networks, limiting flexibility.
-% *************************************************************************************
-
-This work seeks to overcome these limitations through two lines of research: (1) evaluating the scalability of EAM using the \textit{Quick, Draw!} dataset \cite{googlecreativelabQuickDrawData2025}, which contains more than 300 classes and hundreds of thousands of examples per category; and (2) designing a rejection experiment to examine the memory's performance in not recognizing non-stored classes.
-
-In this way, the article contributes to broadening the understanding of the behavior of the Entropic Associative Memory in more complex scenarios, providing empirical evidence of its robustness, generalization capacity, and potential as an alternative paradigm within explainable artificial intelligence.
+This work addresses these limitations by (1) evaluating EAM’s scalability on the large-scale Quick, Draw! dataset \cite{googlecreativelabQuickDrawData2025}, which includes over 300 classes and hundreds of thousands of examples per category, and (2) designing a rejection experiment to assess its performance with non-stored classes. These experiments extend our understanding of EAM’s behavior in complex scenarios, providing empirical evidence of its robustness, generalization capacity, and potential as an alternative paradigm in explainable AI.
 
 
 
 % -------------------- Antecedentes --------------------
 \section{Background}
 
-\noindent The entropic associative memory, proposed by Pineda and Morales \cite{pinedaImageryEntropicAssociative2023}, emerges as a computational model inspired by human cognition, designed to probabilistically and distributively store and retrieve patterns. Unlike conventional memory systems, EAM operates on a single associative memory register, which concentrates the associations of all learned patterns in a matrix representation. This approach enables flexible behavior in recognition and retrieval, and it opens the door to the study of emergent phenomena such as generalization and synthetic image generation.
+\noindent The Entropic Associative Memory (EAM), proposed by Pineda and Morales \cite{pinedaImageryEntropicAssociative2023}, is a cognitively inspired computational model designed to probabilistically and distributively store and retrieve patterns. Unlike conventional systems, EAM employs a single Associative Memory Register that concentrates all learned object representations in a matrix representation, enabling flexible recognition and retrieval while allowing the study of emergent behaviors such as generalization and synthetic image generation.
 
-The model is based on three main operations: 
+The model operates through three core mechanisms:
 \begin{itemize}
-    \item \textbf{$\boldsymbol{\lambda}$-register}: records a pattern in memory by reinforcing associations among its features.
-    \item \textbf{$\boldsymbol{\eta}$-recognition}: determines whether an input stimulus is recognized by the memory, using error tolerance criteria and confidence thresholds.
-    \item \textbf{$\boldsymbol{\beta}$-retrieval}: retrieves a complete pattern from a cue, which may be partial or noisy, by leveraging probabilistic distributions over the stored associations.
+	\item \textbf{$\boldsymbol{\lambda}$-register}: records patterns by reinforcing feature associations.
+	\item \textbf{$\boldsymbol{\eta}$-recognition}: determines whether an input stimulus matches a stored pattern, using tolerance and confidence thresholds.
+	\item \textbf{$\boldsymbol{\beta}$-retrieval}: reconstructs complete patterns from partial or noisy cues through probabilistic inference.
 \end{itemize}
 
-% ***** "More details on how the EAM model works and its characteristics as an explainable model, such as the types of explanations it generates, will be helpful to the reader" *****
-A key characteristic of the EAM, which contributes to its potential as an explainable AI model, is the transparency of its memory representation. Since the \textit{Associative Memory Register} is a matrix where all associations are stored, its state can be directly inspected and visualized. This allows for a clear understanding of how the memory is being populated and which features are being associated. Consequently, when the memory performs a recognition or retrieval operation, it is possible to trace back the process and analyze the strength of the associations that led to the outcome, providing a clear explanation for the model's behavior, in contrast to the ``black box'' nature of many deep learning models.
-% *****************************************************************************************************************
+A distinctive feature of EAM is the transparency of its memory representation. Because all associations are explicitly stored in the memory matrix, its state can be directly inspected and visualized, offering clear insight into how features interact. This transparency allows tracing recognition or retrieval outcomes to their underlying associations, contrasting with the “black-box” nature of deep learning models and supporting EAM’s potential as an explainable AI approach.
 
-In previous experiments \cite{pinedaImageryEntropicAssociative2023,hernandezRememberingCIFAR10Images2026}, EAM was evaluated with the \textit{Fashion MNIST} \cite{zalandoresearchFashionMNIST2022} and CIFAR-10 \cite{alexkrizhevskyLearningMultipleLayers2009} datasets, which consists of 70,000 and 60,000 images across 10 classes, respectively. In this setting, the memory was supplied with latent representations generated by a convolutional autoencoder and demonstrated the ability to both recognize and reconstruct patterns even under noisy or incompleteness conditions. Furthermore, emergent phenomena such as the generation of memory sequences (\textit{association chains}) were explored, showing the system's capacity to transition between stored representations. A subsequent study was carried out using Google's \emph{Quick, Draw!} dataset, with small variations in the number of classes (between 10 and 13), yielding acceptable results \cite{gonzalez2024clasificador}.
+Previous experiments \cite{pinedaImageryEntropicAssociative2023,hernandezRememberingCIFAR10Images2026} evaluated EAM using Fashion MNIST \cite{zalandoresearchFashionMNIST2022} and CIFAR-10 \cite{alexkrizhevskyLearningMultipleLayers2009}, where latent representations from a convolutional autoencoder were successfully recognized and reconstructed despite noise or incompleteness. Emergent phenomena such as association-chains transitions between stored representations were also observed. A later study employed the Quick, Draw! dataset with 10–13 classes, obtaining promising results \cite{gonzalez2024clasificador}.
 
-Despite its promising results, the original experimental framework presented relevant limitations:  
-(1) the evaluation was restricted to a reduced set of 10--13 classes, which hindered the analysis of model scalability in more complex contexts;  
-(2) no systematic tests were conducted on the memory's ability to reject patterns from unseen classes, a fundamental aspect in open-set recognition; and  
-(3) the experimental design was tightly coupled to the fixed number of classes configured in the neural networks, limiting flexibility in exploring different memory-loading configurations.
+Nonetheless, earlier frameworks showed key limitations:
+(1) experiments were confined to 10–13 classes, preventing scalability analysis;
+(2) the ability to reject unseen patterns, essential for open-set recognition, was not tested; and
+(3) the design was tightly coupled to a fixed number of neural network classes, reducing flexibility.
 
-These limitations motivate the present work, whose goals is to validate EAM in a more challenging environment through migration to Google's \textit{Quick, Draw!} dataset \cite{googlecreativelabQuickDrawData2025}, decoupling the number of classes used to train the neural networks and to fill the memory, and running a specific experiment to analyze its rejection capability against unseen classes.
+These constraints motivate the present study, which aims to evaluate EAM in a more demanding context using Google’s Quick, Draw! dataset \cite{googlecreativelabQuickDrawData2025}, decouple the number of classes used in network training and memory loading, and analyze the model’s rejection performance for unseen classes.
 
 
 
 % -------------------- Metodología --------------------
 \section{Methodology}
 
-\noindent To extend the validation of the EAM model, and analyze its behavior in more complex scenarios, an experimental methodology was designed and divided into three main phases. These phases enabled migration to a new data domain, evaluation of the explicit rejection mechanism, and provided the system with greater flexibility for future experiments.
+\noindent To extend the validation of the EAM model and analyze its behavior in more complex scenarios, an experimental methodology was designed comprising three phases: dataset migration and large-scale validation, rejection testing, and system refactoring for flexibility.
 
 \subsection{Dataset Migration and Large-Scale Validation}
-\noindent The first step consisted in introducing the \textit{Quick, Draw!} dataset \cite{googlecreativelabQuickDrawData2025}. This process required:
+\noindent The first phase involved integrating the Quick, Draw! dataset \cite{googlecreativelabQuickDrawData2025}, which required:
 \begin{itemize}
-    \item \textbf{Adaptation of the data module:} The data module was modified to load, process, and dynamically balance an arbitrary subset of \emph{Quick, Draw!} classes. The logic was adjusted to handle a variable number of categories and to guarantee an equal number of samples per class.
-    \item \textbf{Retraining of neural networks:} The perceptual system, consisting of an autoencoder and a classifier, was adjusted based on the work in \cite{moralesMissingCueProblem2025} and retrained from scratch using \emph{Quick, Draw!} as the new data source. This step produced suitable latent representations (\textit{features}) for the memory.
-    \item \textbf{Pipeline validation:} The full workflow (autoencoder-classifier training, feature generation, memory storage, and recognition evaluation) was executed to verify the model's compatibility with the new domain.
+	\item \textbf{Data module adaptation:} modification of the data loader to handle an arbitrary subset of Quick, Draw! classes, ensuring balanced samples and variable class counts.
+	\item \textbf{Neural network retraining:} the perceptual system---an autoencoder and a classifier based on \cite{moralesMissingCueProblem2025}---was retrained from scratch using Quick, Draw! to obtain new latent feature representations.
+	\item \textbf{Pipeline validation:} the full workflow (training, feature generation, memory storage, and recognition testing) was executed to confirm compatibility with the new domain.
 \end{itemize}
 
-\subsection{Design and Implementation of the Rejection Experiment}
-\noindent To analyze the system's ability to reject instances of unseen classes, a second experiment was implemented with the following logic:
+\subsection{Rejection Experiment Design}
+\noindent The second phase evaluated EAM’s ability to reject unseen classes:
 \begin{itemize}
-    \item \textbf{Partial memory registration:} Although the perceptual system was trained with all selected classes, only half of them were stored in EAM.
-    \item \textbf{Evaluation with the complete set:} EAM was exposed to all classes, including those not stored in it, enabling explicit evaluation of its rejection response.
-    \item \textbf{Acceptance and rejection metric:} Standard metrics were employed to evaluate the system's ability to avoid associating patterns from unseen classes.
+	\item \textbf{Partial memory loading:} although the perceptual system was trained with all classes, only half were stored in EAM.
+	\item \textbf{Full-set evaluation:} the complete dataset, including non-stored classes, was used to assess explicit rejection behavior.
+	\item \textbf{Metrics:} standard measures quantified the system’s capacity to avoid false associations with unseen patterns.
 \end{itemize}
 
 \subsection{Refactoring for Experimental Flexibility}
-\noindent To transform the system into a more versatile experimental platform, additional modifications were carried out:
+\noindent The third phase improved modularity and scalability:
 \begin{itemize}
-    \item \textbf{Parametrization of the number of classes:} The main program was modified to accept the number of classes as a runtime argument, instead of being hard-coded.
-    \item \textbf{Parameter propagation:} This value was passed to the data module, allowing dynamic preparation of only the required subset of classes.
-    \item \textbf{Dynamic loading:} The system was enabled to run experiments with different numbers of classes, adapting to controlled scenarios of varying complexity.
+	\item \textbf{Class parameterization:} the number of classes became a runtime argument rather than a fixed value.
+	\item \textbf{Parameter propagation:} this value was passed to the data module for dynamic subset selection.
+	\item \textbf{Dynamic loading:} experiments could now run with variable class counts, supporting controlled complexity levels.
 \end{itemize}
-%
-Taken together, these three methodological phases allowed the model scaling to a substantially larger domain, analyze its rejection capability when facing novel stimuli, and provide a more flexible infrastructure for future experimental trials.
 
+Together, these phases enabled EAM’s migration to a large-scale domain, evaluation of its rejection capability for novel stimuli, and a more flexible infrastructure for future experimentation.
 
 
 % -------------------- Resultados --------------------
